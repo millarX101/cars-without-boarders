@@ -6,7 +6,7 @@ export type Transmission = 'automatic' | 'manual' | 'cvt' | 'dct' | 'other';
 
 export type SellerType = 'dealer' | 'private';
 
-export type ListingSource = 'carsales' | 'gumtree';
+export type ListingSource = 'carsales' | 'gumtree' | 'carsguide' | 'autotrader' | 'dealer' | 'mock';
 
 export interface CarListing {
   id: string;
@@ -47,8 +47,9 @@ export interface CarListing {
   features: string[];
 
   // Meta
-  firstScrapedAt: string;
-  lastScrapedAt: string;
+  scrapedAt?: string;
+  firstScrapedAt?: string;
+  lastScrapedAt?: string;
   isActive: boolean;
 }
 
