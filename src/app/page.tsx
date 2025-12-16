@@ -1,21 +1,22 @@
-import { SearchBar } from '@/components/search/search-bar';
-import { Car, TrendingUp, Truck, Calculator, Shield } from 'lucide-react';
+import Link from 'next/link';
+import { Car, TrendingUp, Truck, Calculator, Shield, ArrowRight, CheckCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const features = [
-  {
-    icon: <TrendingUp className="h-6 w-6" />,
-    title: 'Compare Prices Nationwide',
-    description: 'Search cars from Carsales and Gumtree across all Australian states in one place.',
-  },
   {
     icon: <Calculator className="h-6 w-6" />,
     title: 'True Cost Calculator',
     description: 'See the real delivered price including transport, stamp duty, rego, and CTP.',
   },
   {
+    icon: <TrendingUp className="h-6 w-6" />,
+    title: 'Compare Up to 5 Cars',
+    description: 'Enter details for multiple cars and compare total costs side by side.',
+  },
+  {
     icon: <Truck className="h-6 w-6" />,
-    title: 'Transport Included',
-    description: 'Get instant transport quotes and arrange delivery to your doorstep.',
+    title: 'Interstate Transport Costs',
+    description: 'Get accurate transport estimates from any state to your location.',
   },
   {
     icon: <Shield className="h-6 w-6" />,
@@ -24,10 +25,13 @@ const features = [
   },
 ];
 
-const stats = [
-  { label: 'Cars Listed', value: '50,000+' },
-  { label: 'States Covered', value: '8' },
-  { label: 'Average Savings', value: '$2,500' },
+const costItems = [
+  'Stamp duty by state',
+  'Registration fees',
+  'CTP insurance',
+  'Interstate transport',
+  'Roadworthy inspections',
+  'EV stamp duty exemptions',
 ];
 
 export default function HomePage() {
@@ -45,47 +49,124 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/20 px-4 py-2 text-sm font-medium text-blue-100 backdrop-blur">
-              <Car className="h-4 w-4" />
-              Find your perfect car, anywhere in Australia
+              <Calculator className="h-4 w-4" />
+              Calculate the true cost of any car
             </div>
 
             <h1 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Cars Without Borders
+              What Will Your Car <span className="text-yellow-300">Really</span> Cost?
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-lg text-blue-100 sm:text-xl">
-              Compare used cars across Australia and see the{' '}
-              <span className="font-semibold text-white">true delivered cost</span> to your
-              location. No surprises, no hidden fees.
+              Found a great deal interstate? Our calculator shows the{' '}
+              <span className="font-semibold text-white">true delivered price</span> including
+              transport, stamp duty, rego, and all on-road costs.
             </p>
 
-            {/* Stats */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-8 text-white">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-3xl font-bold">{stat.value}</div>
-                  <div className="text-sm text-blue-200">{stat.label}</div>
-                </div>
-              ))}
+            {/* CTA Buttons */}
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50" asChild>
+                <Link href="/calculator" className="flex items-center gap-2">
+                  <Calculator className="h-5 w-5" />
+                  Try the Calculator
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10" asChild>
+                <Link href="/search">
+                  Browse Cars
+                </Link>
+              </Button>
+            </div>
+
+            {/* What's Included */}
+            <div className="mx-auto mt-12 max-w-2xl">
+              <p className="mb-4 text-sm font-medium text-blue-200">Costs we calculate for you:</p>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {costItems.map((item) => (
+                  <span
+                    key={item}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-sm text-white backdrop-blur"
+                  >
+                    <CheckCircle className="h-3.5 w-3.5 text-green-300" />
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Search Bar */}
-          <div className="mx-auto mt-12 max-w-4xl">
-            <SearchBar />
+      {/* How It Works - Calculator Focus */}
+      <section className="py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Compare cars from any state
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+              Enter the details from any listing and we&apos;ll calculate the total cost to get it registered at your address.
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-8 md:grid-cols-3">
+            {[
+              {
+                step: '1',
+                title: 'Enter car details',
+                description: 'Add the price, seller state, and fuel type for up to 5 cars you\'re considering.',
+                icon: <Car className="h-8 w-8" />,
+              },
+              {
+                step: '2',
+                title: 'Set your location',
+                description: 'Tell us which state you\'ll register the car in.',
+                icon: <Calculator className="h-8 w-8" />,
+              },
+              {
+                step: '3',
+                title: 'Compare total costs',
+                description: 'See the full breakdown and find which car gives you the best value.',
+                icon: <TrendingUp className="h-8 w-8" />,
+              },
+            ].map((item) => (
+              <div key={item.step} className="relative">
+                <div className="flex flex-col items-center text-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-white">
+                    {item.icon}
+                  </div>
+                  <div className="mt-2 flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-600">
+                    {item.step}
+                  </div>
+                  <h3 className="mt-4 text-lg font-semibold text-gray-900">{item.title}</h3>
+                  <p className="mt-2 text-sm text-gray-600">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <Button size="lg" asChild>
+              <Link href="/calculator" className="flex items-center gap-2">
+                <Calculator className="h-5 w-5" />
+                Calculate Costs Now
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-16 sm:py-24">
+      <section className="bg-gray-50 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Why use Cars Without Borders?
+              Why use our calculator?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-              We make it easy to find the best car deal, no matter where it is in Australia.
+              Don&apos;t get caught out by hidden costs when buying interstate.
             </p>
           </div>
 
@@ -106,65 +187,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="bg-gray-100 py-16 sm:py-24">
+      {/* Example Savings */}
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              How it works
-            </h2>
-          </div>
-
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {[
-              {
-                step: '1',
-                title: 'Search for your car',
-                description: 'Enter the make and model you\'re looking for and your location.',
-                icon: <Car className="h-8 w-8" />,
-              },
-              {
-                step: '2',
-                title: 'Compare total costs',
-                description: 'See listings from across Australia with full delivered costs calculated.',
-                icon: <Calculator className="h-8 w-8" />,
-              },
-              {
-                step: '3',
-                title: 'Save or book transport',
-                description: 'Save your favourites or arrange transport directly through us.',
-                icon: <Truck className="h-8 w-8" />,
-              },
-            ].map((item) => (
-              <div key={item.step} className="relative">
-                <div className="flex flex-col items-center text-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-white">
-                    {item.icon}
-                  </div>
-                  <div className="mt-2 flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-600">
-                    {item.step}
-                  </div>
-                  <h3 className="mt-4 text-lg font-semibold text-gray-900">{item.title}</h3>
-                  <p className="mt-2 text-sm text-gray-600">{item.description}</p>
-                </div>
+          <div className="overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 shadow-xl">
+            <div className="px-6 py-12 sm:px-12 sm:py-16 lg:flex lg:items-center lg:justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white sm:text-3xl">
+                  Example: A $30,000 car from Melbourne to Sydney
+                </h2>
+                <p className="mt-4 max-w-xl text-lg text-blue-100">
+                  Transport (~$800) + Stamp Duty (~$1,050) + Rego (~$300) + CTP (~$500) = <span className="font-bold text-white">$32,650 total</span>
+                </p>
+                <p className="mt-2 text-sm text-blue-200">
+                  Know the true cost before you commit.
+                </p>
               </div>
-            ))}
+              <div className="mt-8 lg:mt-0 lg:shrink-0">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50" asChild>
+                  <Link href="/calculator" className="flex items-center gap-2">
+                    Calculate Your Car
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-blue-600 py-16">
+      {/* Final CTA */}
+      <section className="bg-gray-900 py-16">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
-            Ready to find your next car?
+            Ready to find out the true cost?
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-blue-100">
-            Start searching now and discover cars you might have missed - with full cost
-            transparency.
+          <p className="mx-auto mt-4 max-w-xl text-lg text-gray-400">
+            Compare up to 5 cars and find the best deal after all costs.
           </p>
-          <div className="mt-8 flex justify-center">
-            <SearchBar variant="compact" />
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
+              <Link href="/calculator" className="flex items-center gap-2">
+                <Calculator className="h-5 w-5" />
+                Open Calculator
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

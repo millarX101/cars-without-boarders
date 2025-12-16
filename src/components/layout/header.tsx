@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Car, Menu, X, Heart, Search, User } from 'lucide-react';
+import { Car, Menu, X, Heart, Search, User, Calculator } from 'lucide-react';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -25,17 +25,18 @@ export function Header() {
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-6 md:flex">
           <Link
+            href="/calculator"
+            className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
+          >
+            <Calculator className="h-4 w-4" />
+            Cost Calculator
+          </Link>
+          <Link
             href="/search"
             className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900"
           >
             <Search className="h-4 w-4" />
             Search
-          </Link>
-          <Link
-            href="/compare"
-            className="text-sm font-medium text-gray-600 hover:text-gray-900"
-          >
-            Compare
           </Link>
           <Link
             href="/saved"
@@ -75,19 +76,20 @@ export function Header() {
         <div className="border-t border-gray-200 bg-white md:hidden">
           <div className="space-y-1 px-4 py-3">
             <Link
+              href="/calculator"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-base font-medium text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Calculator className="h-5 w-5" />
+              Cost Calculator
+            </Link>
+            <Link
               href="/search"
               className="flex items-center gap-2 rounded-lg px-3 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               onClick={() => setMobileMenuOpen(false)}
             >
               <Search className="h-5 w-5" />
               Search Cars
-            </Link>
-            <Link
-              href="/compare"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Compare
             </Link>
             <Link
               href="/saved"
