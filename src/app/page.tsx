@@ -54,13 +54,13 @@ export default function HomePage() {
             </div>
 
             <h1 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              What Will Your Car <span className="text-yellow-300">Really</span> Cost?
+              Shop Cars <span className="text-yellow-300">Across Australia</span>
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-lg text-blue-100 sm:text-xl">
-              Found a great deal interstate? Our calculator shows the{' '}
-              <span className="font-semibold text-white">true delivered price</span> including
-              transport, stamp duty, rego, and all on-road costs.
+              Open your options to cars from every state. See the{' '}
+              <span className="font-semibold text-white">true delivered price</span> to your door —
+              including transport, stamp duty, rego, and all on-road costs.
             </p>
 
             {/* CTA Buttons */}
@@ -103,10 +103,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Compare cars from any state
+              Compare cars from anywhere in Australia
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-              Enter the details from any listing and we&apos;ll calculate the total cost to get it registered at your address.
+              Enter the details from any listing and we&apos;ll show you the true cost delivered to your door.
             </p>
           </div>
 
@@ -166,7 +166,7 @@ export default function HomePage() {
               Why use our calculator?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-              Don&apos;t get caught out by hidden costs when buying interstate.
+              See the true cost of any car delivered to your door, no matter where it&apos;s listed.
             </p>
           </div>
 
@@ -220,10 +220,10 @@ export default function HomePage() {
       <section className="bg-gray-900 py-16">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
-            Ready to find out the true cost?
+            Explore cars from every state
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-gray-400">
-            Compare up to 5 cars and find the best deal after all costs.
+            Compare up to 5 cars and see the true delivered cost to your door.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
