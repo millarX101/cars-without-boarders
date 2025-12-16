@@ -55,9 +55,12 @@ const createEmptyCar = (): CarEntry => ({
   fuelType: 'petrol',
 });
 
+type TransportType = 'depot' | 'door';
+
 export default function CalculatorPage() {
   const [cars, setCars] = useState<CarEntry[]>([createEmptyCar()]);
   const [deliveryState, setDeliveryState] = useState<AustralianState | ''>('');
+  const [transportType, setTransportType] = useState<TransportType>('depot');
   const [results, setResults] = useState<CostResult[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
 
@@ -138,10 +141,14 @@ export default function CalculatorPage() {
       'NSW': 150, 'VIC': 180, 'QLD': 120, 'SA': 130, 'WA': 200, 'TAS': 140, 'ACT': 160, 'NT': 100,
     };
 
+    // Door-to-door adds $200 each end (pickup from seller home + delivery to buyer home)
+    const doorToDoorFee = transportType === 'door' ? 400 : 0;
+
     const newResults: CostResult[] = validCars.map((car, index) => {
       const price = parseFloat(car.vehiclePrice);
       const isInterstate = car.sellerState !== deliveryState;
-      const transport = transportCosts[car.sellerState]?.[deliveryState] || 0;
+      const baseTransport = transportCosts[car.sellerState]?.[deliveryState] || 0;
+      const transport = isInterstate ? baseTransport + doorToDoorFee : 0;
       const stampDuty = Math.round(calculateStampDuty(deliveryState, price, car.fuelType));
 
       // Use enhanced registration calculator (includes CTP/MII/MAI)
@@ -208,16 +215,40 @@ export default function CalculatorPage() {
       </section>
 
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Delivery Location */}
+        {/* Delivery Location & Transport Type */}
         <div className="mb-8 rounded-xl bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">Your Location</h2>
-          <p className="mt-1 text-sm text-gray-500">Where will you register the car?</p>
-          <div className="mt-4 max-w-xs">
-            <Select
-              value={deliveryState}
-              onChange={(e) => setDeliveryState(e.target.value as AustralianState)}
-              options={[{ value: '', label: 'Select your state...' }, ...STATES]}
-            />
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">Your Location</h2>
+              <p className="mt-1 text-sm text-gray-500">Where will you register the car?</p>
+              <div className="mt-4 max-w-xs">
+                <Select
+                  value={deliveryState}
+                  onChange={(e) => setDeliveryState(e.target.value as AustralianState)}
+                  options={[{ value: '', label: 'Select your state...' }, ...STATES]}
+                />
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">Transport</h2>
+              <p className="mt-1 text-sm text-gray-500">Transport costs are depot-to-depot by default</p>
+              <div className="mt-4">
+                <label className="flex cursor-pointer items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={transportType === 'door'}
+                    onChange={(e) => setTransportType(e.target.checked ? 'door' : 'depot')}
+                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <div>
+                    <span className="font-medium text-gray-900">Include door-to-door pickup</span>
+                    <span className="ml-2 text-sm text-gray-500">(+$400)</span>
+                    <p className="text-xs text-gray-500">Adds ~$200 each end for home pickup & delivery</p>
+                  </div>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
 
