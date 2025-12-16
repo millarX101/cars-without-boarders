@@ -2,7 +2,7 @@ import { Mail, MessageSquare } from 'lucide-react';
 
 export const metadata = {
   title: 'Contact Us',
-  description: 'Get in touch with the Cars Without Borders team.',
+  description: 'Get in touch with the landedX team.',
 };
 
 export default function ContactPage() {
@@ -31,10 +31,10 @@ export default function ContactPage() {
               <h3 className="mt-4 text-lg font-semibold text-gray-900">Email Us</h3>
               <p className="mt-2 text-gray-600">For general enquiries and support</p>
               <a
-                href="mailto:hello@carswithoutborders.com.au"
+                href="mailto:hello@landedx.com.au"
                 className="mt-4 inline-block text-blue-600 hover:underline"
               >
-                hello@carswithoutborders.com.au
+                hello@landedx.com.au
               </a>
             </div>
 
@@ -45,10 +45,10 @@ export default function ContactPage() {
               <h3 className="mt-4 text-lg font-semibold text-gray-900">Feedback</h3>
               <p className="mt-2 text-gray-600">Help us improve the platform</p>
               <a
-                href="mailto:feedback@carswithoutborders.com.au"
+                href="mailto:feedback@landedx.com.au"
                 className="mt-4 inline-block text-blue-600 hover:underline"
               >
-                feedback@carswithoutborders.com.au
+                feedback@landedx.com.au
               </a>
             </div>
           </div>

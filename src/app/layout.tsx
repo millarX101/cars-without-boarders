@@ -11,28 +11,28 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Cars Without Borders | Find Used Cars Across Australia',
-    template: '%s | Cars Without Borders',
+    default: 'landedX | True Cost of Cars Across Australia',
+    template: '%s | landedX',
   },
   description:
-    'Compare used car prices across Australia. Find the best deals by calculating the true delivered cost including transport, stamp duty, and registration.',
+    'See the true delivered cost of any car in Australia. Compare prices across all states including transport, stamp duty, and registration.',
   keywords: [
     'used cars Australia',
     'car comparison',
     'car transport',
     'stamp duty calculator',
     'buy car interstate',
-    'carsales',
-    'gumtree cars',
+    'delivered car cost',
+    'car cost calculator',
   ],
-  authors: [{ name: 'Cars Without Borders' }],
+  authors: [{ name: 'landedX' }],
   openGraph: {
     type: 'website',
     locale: 'en_AU',
-    siteName: 'Cars Without Borders',
-    title: 'Cars Without Borders | Find Used Cars Across Australia',
+    siteName: 'landedX',
+    title: 'landedX | True Cost of Cars Across Australia',
     description:
-      'Compare used car prices across Australia. Find the best deals by calculating the true delivered cost.',
+      'See the true delivered cost of any car in Australia. Compare prices across all states.',
   },
 };
 

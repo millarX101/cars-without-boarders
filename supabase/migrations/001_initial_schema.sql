@@ -1,4 +1,4 @@
--- Cars Without Borders - Initial Database Schema
+-- landedX - Initial Database Schema
 -- Run this in your Supabase SQL editor
 
 -- Enable UUID extension

@@ -17,7 +17,7 @@ export function Header() {
             <Car className="h-6 w-6 text-white" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-bold text-gray-900">Cars Without Borders</span>
+            <span className="text-lg font-bold text-gray-900">landed<span className="font-black text-blue-600">X</span></span>
             <span className="text-xs text-gray-500">Find your car anywhere in Australia</span>
           </div>
         </Link>

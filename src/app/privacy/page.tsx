@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Privacy Policy',
-  description: 'Privacy Policy for Cars Without Borders - how we handle your data.',
+  description: 'Privacy Policy for landedX - how we handle your data.',
 };
 
 export default function PrivacyPage() {
@@ -26,7 +26,7 @@ export default function PrivacyPage() {
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Introduction</h2>
                 <p className="mt-4 text-gray-600">
-                  Cars Without Borders (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) is committed to protecting your privacy.
+                  landedX (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) is committed to protecting your privacy.
                   This Privacy Policy explains how we collect, use, disclose, and safeguard your information
                   when you visit our website and use our services.
                 </p>
@@ -122,8 +122,8 @@ export default function PrivacyPage() {
                   If you have any questions about this Privacy Policy, please contact us at:
                 </p>
                 <p className="mt-2 text-gray-600">
-                  <a href="mailto:privacy@carswithoutborders.com.au" className="text-blue-600 hover:underline">
-                    privacy@carswithoutborders.com.au
+                  <a href="mailto:privacy@landedx.com.au" className="text-blue-600 hover:underline">
+                    privacy@landedx.com.au
                   </a>
                 </p>
               </div>

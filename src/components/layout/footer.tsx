@@ -12,7 +12,7 @@ export function Footer() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
                 <Car className="h-6 w-6 text-white" />
               </div>
-              <span className="text-lg font-bold text-gray-900">Cars Without Borders</span>
+              <span className="text-lg font-bold text-gray-900">landed<span className="font-black text-blue-600">X</span></span>
             </Link>
             <p className="mt-4 max-w-md text-sm text-gray-600">
               Compare used car prices across Australia. Find the best deals by calculating
@@ -72,7 +72,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-gray-200 pt-8">
           <p className="text-center text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} Cars Without Borders. All rights reserved.
+            &copy; {new Date().getFullYear()} landedX. All rights reserved.
           </p>
           <p className="mt-2 text-center text-xs text-gray-400">
             Prices and costs are estimates only. Always verify with official sources before purchasing.

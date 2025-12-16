@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'FAQ',
-  description: 'Frequently asked questions about Cars Without Borders and interstate car buying.',
+  description: 'Frequently asked questions about landedX and calculating true car costs in Australia.',
 };
 
 const faqs = [

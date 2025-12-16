@@ -2,7 +2,7 @@ import { Car, Users, Target, Shield } from 'lucide-react';
 
 export const metadata = {
   title: 'About Us',
-  description: 'Learn about Cars Without Borders - helping Australians find the best car deals nationwide.',
+  description: 'Learn about landedX - see the true delivered cost of any car in Australia.',
 };
 
 export default function AboutPage() {
@@ -12,7 +12,7 @@ export default function AboutPage() {
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white sm:text-5xl">About Cars Without Borders</h1>
+            <h1 className="text-4xl font-bold text-white sm:text-5xl">About landed<span className="font-black">X</span></h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-blue-100">
               Helping Australians find the best car deals, no matter where they are.
             </p>
