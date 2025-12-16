@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import type { AustralianState, FuelType } from '@/lib/types/car';
+import { calculateRego } from '@/lib/calculators/registration';
 
 const STATES: { value: AustralianState; label: string }[] = [
   { value: 'NSW', label: 'New South Wales' },
@@ -40,8 +41,7 @@ interface CostResult {
   vehiclePrice: number;
   transport: number;
   stampDuty: number;
-  registration: number;
-  ctp: number;
+  regoPlusCtp: number;  // Combined from enhanced calculator (includes CTP/MII/MAI)
   roadworthy: number;
   totalDelivered: number;
   sellerState: AustralianState;
@@ -132,14 +132,6 @@ export default function CalculatorPage() {
       }
     };
 
-    const regoByState: Record<AustralianState, number> = {
-      'NSW': 450, 'VIC': 380, 'QLD': 420, 'SA': 480, 'WA': 520, 'TAS': 350, 'ACT': 440, 'NT': 520,
-    };
-
-    const ctpByState: Record<AustralianState, number> = {
-      'NSW': 550, 'VIC': 520, 'QLD': 350, 'SA': 450, 'WA': 480, 'TAS': 380, 'ACT': 550, 'NT': 500,
-    };
-
     const roadworthyByState: Record<AustralianState, number> = {
       'NSW': 150, 'VIC': 180, 'QLD': 120, 'SA': 130, 'WA': 200, 'TAS': 140, 'ACT': 160, 'NT': 100,
     };
@@ -149,10 +141,18 @@ export default function CalculatorPage() {
       const isInterstate = car.sellerState !== deliveryState;
       const transport = transportCosts[car.sellerState]?.[deliveryState] || 0;
       const stampDuty = Math.round(calculateStampDuty(deliveryState, price, car.fuelType));
-      const registration = regoByState[deliveryState];
-      const ctp = ctpByState[deliveryState];
+
+      // Use enhanced registration calculator (includes CTP/MII/MAI)
+      const regoResult = calculateRego({
+        state: deliveryState,
+        term: 12,
+        ev: car.fuelType === 'electric',
+        cylinders: 4, // Default to 4-cylinder
+      });
+      const regoPlusCtp = typeof regoResult === 'number' ? regoResult : Math.round(regoResult.total);
+
       const roadworthy = isInterstate ? roadworthyByState[deliveryState] : 0;
-      const totalDelivered = price + transport + stampDuty + registration + ctp + roadworthy;
+      const totalDelivered = price + transport + stampDuty + regoPlusCtp + roadworthy;
 
       return {
         id: car.id,
@@ -160,8 +160,7 @@ export default function CalculatorPage() {
         vehiclePrice: price,
         transport,
         stampDuty,
-        registration,
-        ctp,
+        regoPlusCtp,
         roadworthy,
         totalDelivered: Math.round(totalDelivered),
         sellerState: car.sellerState as AustralianState,
@@ -256,7 +255,7 @@ export default function CalculatorPage() {
 
                   <Input
                     type="number"
-                    placeholder="Price (e.g. 35000)"
+                    placeholder="Advertised price (excl. govt charges)"
                     value={car.vehiclePrice}
                     onChange={(e) => updateCar(car.id, 'vehiclePrice', e.target.value)}
                   />
@@ -315,7 +314,7 @@ export default function CalculatorPage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Car</th>
-                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Price</th>
+                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Advertised Price</th>
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Transport</th>
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Stamp Duty</th>
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Rego + CTP</th>
@@ -349,7 +348,7 @@ export default function CalculatorPage() {
                           )}
                         </td>
                         <td className="px-4 py-4 text-right text-gray-600">
-                          {formatCurrency(result.registration + result.ctp)}
+                          {formatCurrency(result.regoPlusCtp)}
                         </td>
                         <td className="px-4 py-4 text-right text-gray-600">
                           {result.roadworthy > 0 ? formatCurrency(result.roadworthy) : '-'}
@@ -389,7 +388,7 @@ export default function CalculatorPage() {
 
                   <div className="mt-4 space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Vehicle Price</span>
+                      <span className="text-gray-500">Advertised Price</span>
                       <span>{formatCurrency(result.vehiclePrice)}</span>
                     </div>
                     {result.transport > 0 && (
@@ -404,7 +403,7 @@ export default function CalculatorPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Rego + CTP</span>
-                      <span>{formatCurrency(result.registration + result.ctp)}</span>
+                      <span>{formatCurrency(result.regoPlusCtp)}</span>
                     </div>
                     {result.roadworthy > 0 && (
                       <div className="flex justify-between">

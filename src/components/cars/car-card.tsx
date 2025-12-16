@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, MapPin, Gauge, Fuel, Settings2 } from 'lucide-react';
+import { Heart, MapPin, Gauge, Fuel, Settings2, Car } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -48,7 +48,7 @@ export function CarCard({ listing, deliveryState, onSave, isSaved = false }: Car
     <Card className="group overflow-hidden transition-shadow hover:shadow-lg">
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-        {listing.images[0] ? (
+        {listing.images[0] && !listing.images[0].includes('placeholder') ? (
           <Image
             src={listing.images[0]}
             alt={listing.title}
@@ -57,8 +57,9 @@ export function CarCard({ listing, deliveryState, onSave, isSaved = false }: Car
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-gray-400">
-            No image
+          <div className="flex h-full flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 text-gray-400">
+            <Car className="h-16 w-16 text-gray-300" />
+            <span className="mt-2 text-sm">Image coming soon</span>
           </div>
         )}
 
