@@ -89,15 +89,17 @@ export default function CalculatorPage() {
     setIsCalculating(true);
     await new Promise(resolve => setTimeout(resolve, 300));
 
+    // Transport costs: depot-to-depot quotes + 10% margin (sedan rates, Dec 2024)
+    // Based on real carrier quotes for standard sedans
     const transportCosts: Record<string, Record<string, number>> = {
-      'NSW': { 'NSW': 0, 'VIC': 450, 'QLD': 550, 'SA': 700, 'WA': 1100, 'TAS': 900, 'ACT': 250, 'NT': 1300 },
-      'VIC': { 'NSW': 450, 'VIC': 0, 'QLD': 650, 'SA': 450, 'WA': 1200, 'TAS': 750, 'ACT': 500, 'NT': 1400 },
-      'QLD': { 'NSW': 550, 'VIC': 650, 'QLD': 0, 'SA': 950, 'WA': 1300, 'TAS': 1050, 'ACT': 650, 'NT': 1200 },
-      'SA': { 'NSW': 700, 'VIC': 450, 'QLD': 950, 'SA': 0, 'WA': 950, 'TAS': 850, 'ACT': 750, 'NT': 1100 },
-      'WA': { 'NSW': 1100, 'VIC': 1200, 'QLD': 1300, 'SA': 950, 'WA': 0, 'TAS': 1400, 'ACT': 1150, 'NT': 1200 },
-      'TAS': { 'NSW': 900, 'VIC': 750, 'QLD': 1050, 'SA': 850, 'WA': 1400, 'TAS': 0, 'ACT': 950, 'NT': 1500 },
-      'ACT': { 'NSW': 250, 'VIC': 500, 'QLD': 650, 'SA': 750, 'WA': 1150, 'TAS': 950, 'ACT': 0, 'NT': 1350 },
-      'NT': { 'NSW': 1300, 'VIC': 1400, 'QLD': 1200, 'SA': 1100, 'WA': 1200, 'TAS': 1500, 'ACT': 1350, 'NT': 0 },
+      'NSW': { 'NSW': 0, 'VIC': 770, 'QLD': 880, 'SA': 1100, 'WA': 2200, 'TAS': 1320, 'ACT': 330, 'NT': 2420 },
+      'VIC': { 'NSW': 770, 'VIC': 0, 'QLD': 1210, 'SA': 770, 'WA': 2420, 'TAS': 880, 'ACT': 880, 'NT': 2640 },
+      'QLD': { 'NSW': 880, 'VIC': 1210, 'QLD': 0, 'SA': 1540, 'WA': 2860, 'TAS': 1650, 'ACT': 990, 'NT': 1980 },
+      'SA': { 'NSW': 1100, 'VIC': 770, 'QLD': 1540, 'SA': 0, 'WA': 1650, 'TAS': 1210, 'ACT': 1210, 'NT': 1980 },
+      'WA': { 'NSW': 2200, 'VIC': 2420, 'QLD': 2860, 'SA': 1650, 'WA': 0, 'TAS': 2860, 'ACT': 2310, 'NT': 2200 },
+      'TAS': { 'NSW': 1320, 'VIC': 880, 'QLD': 1650, 'SA': 1210, 'WA': 2860, 'TAS': 0, 'ACT': 1430, 'NT': 2860 },
+      'ACT': { 'NSW': 330, 'VIC': 880, 'QLD': 990, 'SA': 1210, 'WA': 2310, 'TAS': 1430, 'ACT': 0, 'NT': 2530 },
+      'NT': { 'NSW': 2420, 'VIC': 2640, 'QLD': 1980, 'SA': 1980, 'WA': 2200, 'TAS': 2860, 'ACT': 2530, 'NT': 0 },
     };
 
     const calculateStampDuty = (state: AustralianState, price: number, fuelType: FuelType): number => {
