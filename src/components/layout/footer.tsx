@@ -9,10 +9,10 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-700">
                 <Car className="h-6 w-6 text-white" />
               </div>
-              <span className="text-lg font-bold text-gray-900">landed<span className="font-black text-blue-600">X</span></span>
+              <span className="text-lg font-bold text-gray-900">landed<span className="font-black text-purple-700">X</span></span>
             </Link>
             <p className="mt-4 max-w-md text-sm text-gray-600">
               Compare used car prices across Australia. Find the best deals by calculating

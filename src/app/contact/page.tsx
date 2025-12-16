@@ -9,11 +9,11 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 py-16">
+      <section className="bg-gradient-to-br from-purple-700 to-purple-900 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white sm:text-5xl">Contact Us</h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-blue-100">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-purple-100">
               Have a question or feedback? We&apos;d love to hear from you.
             </p>
           </div>
@@ -25,28 +25,28 @@ export default function ContactPage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 md:grid-cols-2">
             <div className="rounded-lg bg-white p-8 text-center shadow-sm">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 text-purple-700">
                 <Mail className="h-8 w-8" />
               </div>
               <h3 className="mt-4 text-lg font-semibold text-gray-900">Email Us</h3>
               <p className="mt-2 text-gray-600">For general enquiries and support</p>
               <a
                 href="mailto:hello@landedx.com.au"
-                className="mt-4 inline-block text-blue-600 hover:underline"
+                className="mt-4 inline-block text-purple-700 hover:underline"
               >
                 hello@landedx.com.au
               </a>
             </div>
 
             <div className="rounded-lg bg-white p-8 text-center shadow-sm">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 text-purple-700">
                 <MessageSquare className="h-8 w-8" />
               </div>
               <h3 className="mt-4 text-lg font-semibold text-gray-900">Feedback</h3>
               <p className="mt-2 text-gray-600">Help us improve the platform</p>
               <a
                 href="mailto:feedback@landedx.com.au"
-                className="mt-4 inline-block text-blue-600 hover:underline"
+                className="mt-4 inline-block text-purple-700 hover:underline"
               >
                 feedback@landedx.com.au
               </a>
@@ -114,7 +114,7 @@ export default function ContactPage() {
 
               <button
                 type="submit"
-                className="w-full rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="w-full rounded-lg bg-purple-700 px-6 py-3 font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
               >
                 Send Message
               </button>

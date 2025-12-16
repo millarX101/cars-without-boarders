@@ -2,7 +2,40 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
+
+  /* millarX Brand Colors */
+  --mx-purple-50: #f5f3ff;
+  --mx-purple-100: #ede9fe;
+  --mx-purple-200: #ddd6fe;
+  --mx-purple-300: #c4b5fd;
+  --mx-purple-400: #a78bfa;
+  --mx-purple-500: #8b5cf6;
+  --mx-purple-600: #7c3aed;
+  --mx-purple-700: #6d28d9;
+  --mx-purple-800: #5b21b6;
+  --mx-purple-900: #4c1d95;
+
+  --mx-teal-500: #14b8a6;
+  --mx-teal-600: #0d9488;
+
+  --mx-slate-50: #f8fafc;
+  --mx-slate-100: #f1f5f9;
+  --mx-slate-200: #e2e8f0;
+  --mx-slate-300: #cbd5e1;
+  --mx-slate-400: #94a3b8;
+  --mx-slate-500: #64748b;
+  --mx-slate-600: #475569;
+  --mx-slate-700: #334155;
+  --mx-slate-800: #1e293b;
+  --mx-slate-900: #0f172a;
+
+  --mx-warm-50: #faf9f7;
+  --mx-warm-100: #f5f3f0;
+
+  --mx-amber-50: #fffbeb;
+  --mx-amber-200: #fde68a;
+  --mx-amber-600: #d97706;
 }
 
 @theme inline {
@@ -10,17 +43,25 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Custom brand colors for Tailwind */
+  --color-brand-50: var(--mx-purple-50);
+  --color-brand-100: var(--mx-purple-100);
+  --color-brand-200: var(--mx-purple-200);
+  --color-brand-300: var(--mx-purple-300);
+  --color-brand-400: var(--mx-purple-400);
+  --color-brand-500: var(--mx-purple-500);
+  --color-brand-600: var(--mx-purple-600);
+  --color-brand-700: var(--mx-purple-700);
+  --color-brand-800: var(--mx-purple-800);
+  --color-brand-900: var(--mx-purple-900);
+
+  --color-accent-500: var(--mx-teal-500);
+  --color-accent-600: var(--mx-teal-600);
 }
 
 body {
-  background: var(--background);
+  background: var(--mx-warm-50);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }

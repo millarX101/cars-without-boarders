@@ -50,11 +50,11 @@ export default function FAQPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 py-16">
+      <section className="bg-gradient-to-br from-purple-700 to-purple-900 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white sm:text-5xl">Frequently Asked Questions</h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-blue-100">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-purple-100">
               Everything you need to know about buying cars interstate.
             </p>
           </div>
@@ -73,14 +73,14 @@ export default function FAQPage() {
             ))}
           </div>
 
-          <div className="mt-12 rounded-lg bg-blue-50 p-6 text-center">
+          <div className="mt-12 rounded-lg bg-purple-50 p-6 text-center">
             <h3 className="text-lg font-semibold text-gray-900">Still have questions?</h3>
             <p className="mt-2 text-gray-600">
               Can&apos;t find what you&apos;re looking for? Get in touch with us.
             </p>
             <a
               href="/contact"
-              className="mt-4 inline-block rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
+              className="mt-4 inline-block rounded-lg bg-purple-700 px-6 py-2 text-white hover:bg-purple-800"
             >
               Contact Us
             </a>

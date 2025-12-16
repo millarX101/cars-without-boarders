@@ -13,11 +13,11 @@ export function Header() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-700">
             <Car className="h-6 w-6 text-white" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-bold text-gray-900">landed<span className="font-black text-blue-600">X</span></span>
+            <span className="text-lg font-bold text-gray-900">landed<span className="font-black text-purple-700">X</span></span>
             <span className="text-xs text-gray-500">Find your car anywhere in Australia</span>
           </div>
         </Link>
@@ -26,7 +26,7 @@ export function Header() {
         <div className="hidden items-center gap-6 md:flex">
           <Link
             href="/calculator"
-            className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
+            className="flex items-center gap-1.5 text-sm font-medium text-purple-700 hover:text-purple-800"
           >
             <Calculator className="h-4 w-4" />
             Cost Calculator
@@ -77,7 +77,7 @@ export function Header() {
           <div className="space-y-1 px-4 py-3">
             <Link
               href="/calculator"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-base font-medium text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-base font-medium text-purple-700 hover:bg-purple-50 hover:text-purple-800"
               onClick={() => setMobileMenuOpen(false)}
             >
               <Calculator className="h-5 w-5" />

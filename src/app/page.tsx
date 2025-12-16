@@ -38,7 +38,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 py-20 sm:py-28">
+      <section className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900 py-20 sm:py-28">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -48,16 +48,16 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/20 px-4 py-2 text-sm font-medium text-blue-100 backdrop-blur">
+            <div className="inline-flex items-center gap-2 rounded-full bg-purple-500/20 px-4 py-2 text-sm font-medium text-purple-100 backdrop-blur">
               <Calculator className="h-4 w-4" />
               Calculate the true cost of any car
             </div>
 
             <h1 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Shop Cars <span className="text-yellow-300">Across Australia</span>
+              Shop Cars <span className="text-teal-300">Across Australia</span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-blue-100 sm:text-xl">
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-purple-100 sm:text-xl">
               Open your options to cars from every state. See the{' '}
               <span className="font-semibold text-white">true delivered price</span> to your door —
               including transport, stamp duty, rego, and all on-road costs.
@@ -65,7 +65,7 @@ export default function HomePage() {
 
             {/* CTA Buttons */}
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50" asChild>
+              <Button size="lg" className="bg-white text-purple-700 hover:bg-purple-50" asChild>
                 <Link href="/calculator" className="flex items-center gap-2">
                   <Calculator className="h-5 w-5" />
                   Try the Calculator
@@ -81,14 +81,14 @@ export default function HomePage() {
 
             {/* What's Included */}
             <div className="mx-auto mt-12 max-w-2xl">
-              <p className="mb-4 text-sm font-medium text-blue-200">Costs we calculate for you:</p>
+              <p className="mb-4 text-sm font-medium text-purple-200">Costs we calculate for you:</p>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 {costItems.map((item) => (
                   <span
                     key={item}
                     className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-sm text-white backdrop-blur"
                   >
-                    <CheckCircle className="h-3.5 w-3.5 text-green-300" />
+                    <CheckCircle className="h-3.5 w-3.5 text-teal-300" />
                     {item}
                   </span>
                 ))}
@@ -133,10 +133,10 @@ export default function HomePage() {
             ].map((item) => (
               <div key={item.step} className="relative">
                 <div className="flex flex-col items-center text-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-white">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-purple-700 text-white">
                     {item.icon}
                   </div>
-                  <div className="mt-2 flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-600">
+                  <div className="mt-2 flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-sm font-bold text-purple-700">
                     {item.step}
                   </div>
                   <h3 className="mt-4 text-lg font-semibold text-gray-900">{item.title}</h3>
@@ -176,7 +176,7 @@ export default function HomePage() {
                 key={feature.title}
                 className="relative rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200 transition-shadow hover:shadow-md"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-700">
                   {feature.icon}
                 </div>
                 <h3 className="mt-4 text-lg font-semibold text-gray-900">{feature.title}</h3>
@@ -190,21 +190,21 @@ export default function HomePage() {
       {/* Example Savings */}
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 shadow-xl">
+          <div className="overflow-hidden rounded-2xl bg-gradient-to-r from-purple-700 to-purple-900 shadow-xl">
             <div className="px-6 py-12 sm:px-12 sm:py-16 lg:flex lg:items-center lg:justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-white sm:text-3xl">
                   Example: A $30,000 car from Melbourne to Sydney
                 </h2>
-                <p className="mt-4 max-w-xl text-lg text-blue-100">
+                <p className="mt-4 max-w-xl text-lg text-purple-100">
                   Transport (~$800) + Stamp Duty (~$1,050) + Rego (~$300) + CTP (~$500) = <span className="font-bold text-white">$32,650 total</span>
                 </p>
-                <p className="mt-2 text-sm text-blue-200">
+                <p className="mt-2 text-sm text-purple-200">
                   Know the true cost before you commit.
                 </p>
               </div>
               <div className="mt-8 lg:mt-0 lg:shrink-0">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50" asChild>
+                <Button size="lg" className="bg-white text-purple-700 hover:bg-purple-50" asChild>
                   <Link href="/calculator" className="flex items-center gap-2">
                     Calculate Your Car
                     <ArrowRight className="h-4 w-4" />
@@ -226,7 +226,7 @@ export default function HomePage() {
             Compare up to 5 cars and see the true delivered cost to your door.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
+            <Button size="lg" className="bg-purple-700 hover:bg-purple-800" asChild>
               <Link href="/calculator" className="flex items-center gap-2">
                 <Calculator className="h-5 w-5" />
                 Open Calculator
