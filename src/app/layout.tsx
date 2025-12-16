@@ -15,15 +15,36 @@ export const metadata: Metadata = {
     template: '%s | landedX',
   },
   description:
-    'See the true delivered cost of any car in Australia. Compare prices across all states including transport, stamp duty, and registration.',
+    'See the true delivered cost of any car in Australia. Compare prices across all states including transport, stamp duty, registration, and CTP insurance.',
   keywords: [
+    // Core keywords
     'used cars Australia',
-    'car comparison',
-    'car transport',
-    'stamp duty calculator',
     'buy car interstate',
-    'delivered car cost',
     'car cost calculator',
+    'delivered car cost',
+    // Stamp duty
+    'stamp duty calculator',
+    'car stamp duty NSW',
+    'car stamp duty Victoria',
+    'car stamp duty QLD',
+    'vehicle stamp duty Australia',
+    'motor vehicle duty',
+    // Registration
+    'car registration cost',
+    'rego calculator',
+    'registration fees Australia',
+    'CTP insurance cost',
+    'greenslip calculator',
+    // Transport
+    'car transport Australia',
+    'interstate car transport',
+    'car delivery cost',
+    'vehicle transport quote',
+    // Comparison
+    'compare car costs',
+    'car price comparison',
+    'true cost of car',
+    'on road costs',
   ],
   authors: [{ name: 'landedX' }],
   openGraph: {
@@ -32,7 +53,19 @@ export const metadata: Metadata = {
     siteName: 'landedX',
     title: 'landedX | True Cost of Cars Across Australia',
     description:
-      'See the true delivered cost of any car in Australia. Compare prices across all states.',
+      'See the true delivered cost of any car in Australia. Calculate stamp duty, rego, CTP, and transport.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'landedX | True Cost of Cars Across Australia',
+    description: 'Calculate the true delivered cost of any car including stamp duty, rego, and transport.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: 'https://landedx.com.au',
   },
 };
 

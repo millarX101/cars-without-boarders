@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Calculator, Car, MapPin, DollarSign, Truck, FileText, Shield, Plus, X, Trophy } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Calculator, Car, MapPin, DollarSign, Truck, FileText, Shield, Plus, X, Trophy, Mail, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
@@ -57,12 +57,24 @@ const createEmptyCar = (): CarEntry => ({
 
 type TransportType = 'depot' | 'door';
 
+// Simple event tracking helper - logs to console and can be extended for analytics
+const trackEvent = (eventName: string, data?: Record<string, unknown>) => {
+  console.log(`[Track] ${eventName}`, data);
+  // TODO: Add analytics integration (Google Analytics, Mixpanel, etc.)
+  // window.gtag?.('event', eventName, data);
+};
+
 export default function CalculatorPage() {
   const [cars, setCars] = useState<CarEntry[]>([createEmptyCar()]);
   const [deliveryState, setDeliveryState] = useState<AustralianState | ''>('');
   const [transportType, setTransportType] = useState<TransportType>('depot');
   const [results, setResults] = useState<CostResult[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
+
+  // Email waitlist state
+  const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
 
   const addCar = () => {
     if (cars.length < 5) {
@@ -83,6 +95,28 @@ export default function CalculatorPage() {
     ));
   };
 
+  // Handle waitlist email submission
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!waitlistEmail) return;
+
+    setWaitlistLoading(true);
+    trackEvent('transport_waitlist_submit', { email: waitlistEmail });
+
+    // Simulate API call - replace with actual endpoint later
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Store in localStorage for now (can be replaced with Supabase later)
+    const existingEmails = JSON.parse(localStorage.getItem('waitlistEmails') || '[]');
+    if (!existingEmails.includes(waitlistEmail)) {
+      existingEmails.push(waitlistEmail);
+      localStorage.setItem('waitlistEmails', JSON.stringify(existingEmails));
+    }
+
+    setWaitlistSubmitted(true);
+    setWaitlistLoading(false);
+  };
+
   const calculateCosts = async () => {
     if (!deliveryState) return;
 
@@ -91,6 +125,15 @@ export default function CalculatorPage() {
 
     setIsCalculating(true);
     await new Promise(resolve => setTimeout(resolve, 300));
+
+    // Track calculation event
+    const hasInterstate = validCars.some(car => car.sellerState !== deliveryState);
+    trackEvent('calculator_completed', {
+      cars_count: validCars.length,
+      delivery_state: deliveryState,
+      has_interstate: hasInterstate,
+      transport_type: transportType,
+    });
 
     // Transport costs: depot-to-depot quotes + 10% margin (sedan rates, Dec 2024)
     // Based on real carrier quotes for standard sedans
@@ -196,18 +239,18 @@ export default function CalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 py-12">
+      <section className="bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/20 px-4 py-2 text-sm font-medium text-blue-100">
+            <div className="inline-flex items-center gap-2 rounded-full bg-purple-500/20 px-4 py-2 text-sm font-medium text-purple-100">
               <Calculator className="h-4 w-4" />
               True Cost Calculator
             </div>
             <h1 className="mt-4 text-3xl font-bold text-white sm:text-4xl">
               Compare Cars From Different States
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-blue-100">
-              Add up to 5 cars and see the true delivered cost to your door.
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-purple-100">
+              Add up to 5 cars and see the estimated delivered cost to your door.
               Find out which deal is actually the best value.
             </p>
           </div>
@@ -239,7 +282,7 @@ export default function CalculatorPage() {
                     type="checkbox"
                     checked={transportType === 'door'}
                     onChange={(e) => setTransportType(e.target.checked ? 'door' : 'depot')}
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                   />
                   <div>
                     <span className="font-medium text-gray-900">Include door-to-door pickup</span>
@@ -318,7 +361,7 @@ export default function CalculatorPage() {
             size="lg"
             className="w-full sm:w-auto"
           >
-            {isCalculating ? 'Calculating...' : 'Calculate & Compare'}
+            {isCalculating ? 'Calculating...' : 'Estimate Delivery Costs'}
           </Button>
         </div>
 
@@ -352,7 +395,7 @@ export default function CalculatorPage() {
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Stamp Duty</th>
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Rego + CTP</th>
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Inspection</th>
-                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 bg-blue-50">Total</th>
+                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 bg-purple-50">Total</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -386,7 +429,7 @@ export default function CalculatorPage() {
                         <td className="px-4 py-4 text-right text-gray-600">
                           {result.roadworthy > 0 ? formatCurrency(result.roadworthy) : '-'}
                         </td>
-                        <td className="px-4 py-4 text-right font-bold text-blue-600 bg-blue-50">
+                        <td className="px-4 py-4 text-right font-bold text-purple-600 bg-purple-50">
                           {formatCurrency(result.totalDelivered)}
                         </td>
                       </tr>
@@ -415,7 +458,7 @@ export default function CalculatorPage() {
                     </div>
                     <div className="text-right">
                       <div className="text-sm text-gray-500">Total</div>
-                      <div className="text-xl font-bold text-blue-600">{formatCurrency(result.totalDelivered)}</div>
+                      <div className="text-xl font-bold text-purple-600">{formatCurrency(result.totalDelivered)}</div>
                     </div>
                   </div>
 
@@ -449,12 +492,56 @@ export default function CalculatorPage() {
               ))}
             </div>
 
+            {/* Transport Quotes Coming Soon Section */}
+            <div className="rounded-xl border-2 border-dashed border-purple-300 bg-purple-50 p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-purple-100 text-purple-600">
+                  <Truck className="h-6 w-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900">Transport Quotes Coming Soon</h3>
+                  <p className="mt-1 text-sm text-gray-600">
+                    We&apos;re partnering with trusted car transport providers to bring you real-time quotes.
+                    Leave your email to get early access when we launch.
+                  </p>
+
+                  {waitlistSubmitted ? (
+                    <div className="mt-4 flex items-center gap-2 text-green-600">
+                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="font-medium">You&apos;re on the list! We&apos;ll be in touch.</span>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleWaitlistSubmit} className="mt-4 flex gap-2">
+                      <input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={waitlistEmail}
+                        onChange={(e) => setWaitlistEmail(e.target.value)}
+                        className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                        required
+                      />
+                      <Button
+                        type="submit"
+                        disabled={waitlistLoading}
+                        className="bg-purple-600 hover:bg-purple-700"
+                        onClick={() => trackEvent('transport_cta_clicked')}
+                      >
+                        {waitlistLoading ? 'Joining...' : 'Notify Me'}
+                      </Button>
+                    </form>
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* Disclaimer */}
             <div className="rounded-lg bg-gray-100 p-4">
               <p className="text-xs text-gray-500">
                 <strong>Note:</strong> These are estimates based on current government rates and average
                 industry costs. Actual costs may vary. Stamp duty is calculated for used vehicles.
-                Transport costs are for enclosed carrier delivery. Always verify with official sources.
+                Transport costs are indicative and subject to change. Always verify with official sources.
               </p>
             </div>
           </div>
@@ -464,21 +551,21 @@ export default function CalculatorPage() {
         {results.length === 0 && (
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <Truck className="h-8 w-8 text-blue-600" />
-              <h3 className="mt-3 font-semibold text-gray-900">Transport Included</h3>
+              <Truck className="h-8 w-8 text-purple-600" />
+              <h3 className="mt-3 font-semibold text-gray-900">Transport Estimates</h3>
               <p className="mt-2 text-sm text-gray-600">
-                Interstate transport costs are automatically calculated based on carrier rates.
+                Interstate transport costs are estimated based on average carrier rates. Real quotes coming soon.
               </p>
             </div>
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <FileText className="h-8 w-8 text-blue-600" />
+              <FileText className="h-8 w-8 text-purple-600" />
               <h3 className="mt-3 font-semibold text-gray-900">All Fees Included</h3>
               <p className="mt-2 text-sm text-gray-600">
-                Stamp duty, registration, CTP insurance, and inspection costs all calculated.
+                Stamp duty, registration, CTP insurance, and inspection costs all estimated.
               </p>
             </div>
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <Shield className="h-8 w-8 text-blue-600" />
+              <Shield className="h-8 w-8 text-purple-600" />
               <h3 className="mt-3 font-semibold text-gray-900">EV Benefits</h3>
               <p className="mt-2 text-sm text-gray-600">
                 Electric vehicles may qualify for stamp duty exemptions in NSW, ACT, and SA.

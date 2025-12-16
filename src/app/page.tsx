@@ -1,6 +1,32 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Car, TrendingUp, Truck, Calculator, Shield, ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+export const metadata: Metadata = {
+  title: 'landedX | Calculate True Cost of Cars Across Australia',
+  description:
+    'Shop for used cars across all Australian states. See the true delivered price including interstate transport, stamp duty, registration, and CTP insurance. Free car cost calculator.',
+  keywords: [
+    'buy car interstate Australia',
+    'used cars Australia',
+    'car cost calculator',
+    'stamp duty calculator',
+    'interstate car buying',
+    'car transport Australia',
+    'delivered car price',
+    'car registration cost',
+    'CTP insurance cost',
+    'compare car costs',
+  ],
+  openGraph: {
+    title: 'landedX | True Cost of Cars Across Australia',
+    description:
+      'Shop for used cars across all Australian states. Calculate the true delivered price to your door.',
+    type: 'website',
+    locale: 'en_AU',
+  },
+};
 
 const features = [
   {
