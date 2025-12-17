@@ -1,19 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Car, Mail, Lock, Loader2 } from 'lucide-react';
+import { Car, Mail, Lock, Loader2, CheckCircle } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+
+  // Check for redirect messages
+  useEffect(() => {
+    const msg = searchParams.get('message');
+    const verified = searchParams.get('verified');
+
+    if (msg) {
+      setMessage(msg);
+    }
+    if (verified === 'true') {
+      setMessage('Email verified! You can now sign in.');
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,17 +37,49 @@ export default function LoginPage() {
     setError('');
 
     try {
-      // TODO: Implement Supabase auth
-      // const { error } = await supabase.auth.signInWithPassword({ email, password });
-      // if (error) throw error;
+      const supabase = createClient();
 
-      // Mock login for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      router.push('/');
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        if (signInError.message.includes('Email not confirmed')) {
+          setError('Please verify your email before signing in. Check your inbox for the confirmation link.');
+        } else if (signInError.message.includes('Invalid login credentials')) {
+          setError('Invalid email or password');
+        } else {
+          setError(signInError.message);
+        }
+        return;
+      }
+
+      // Check for redirect URL
+      const redirect = searchParams.get('redirect') || '/';
+      router.push(redirect);
+      router.refresh();
     } catch (err) {
-      setError('Invalid email or password');
+      console.error('Login error:', err);
+      setError('Failed to sign in. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) throw error;
+    } catch (err) {
+      console.error('Google sign in error:', err);
+      setError('Failed to sign in with Google');
     }
   };
 
@@ -39,16 +87,23 @@ export default function LoginPage() {
     <div className="flex min-h-[80vh] items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-700">
             <Car className="h-7 w-7 text-white" />
           </div>
           <CardTitle className="text-2xl">Welcome back</CardTitle>
           <CardDescription>
-            Sign in to access your saved cars and searches
+            Sign in to access your saved cars and listings
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {message && (
+              <div className="rounded-lg bg-green-50 p-3 text-sm text-green-600 flex items-center gap-2">
+                <CheckCircle className="h-4 w-4" />
+                {message}
+              </div>
+            )}
+
             {error && (
               <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
                 {error}
@@ -93,10 +148,10 @@ export default function LoginPage() {
 
             <div className="flex items-center justify-between">
               <label className="flex items-center">
-                <input type="checkbox" className="h-4 w-4 rounded border-gray-300" />
+                <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-500" />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <Link href="/auth/forgot-password" className="text-sm text-blue-600 hover:underline">
+              <Link href="/auth/forgot-password" className="text-sm text-purple-700 hover:underline">
                 Forgot password?
               </Link>
             </div>
@@ -123,7 +178,12 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button variant="outline" className="mt-4 w-full" type="button">
+            <Button
+              variant="outline"
+              className="mt-4 w-full"
+              type="button"
+              onClick={handleGoogleSignIn}
+            >
               <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
@@ -148,12 +208,24 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Don&apos;t have an account?{' '}
-            <Link href="/auth/signup" className="font-medium text-blue-600 hover:underline">
+            <Link href="/auth/signup" className="font-medium text-purple-700 hover:underline">
               Sign up
             </Link>
           </p>
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-[80vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-purple-700" />
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

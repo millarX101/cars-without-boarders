@@ -15,6 +15,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { MarketplaceListing, ListingImage } from '@/lib/types/database';
 import { calculateStampDuty } from '@/lib/calculators/stamp-duty';
 import { calculateRego } from '@/lib/calculators/registration';
+import { getTransportCost } from '@/lib/calculators/transport';
 
 const STATES = [
   { value: 'NSW', label: 'NSW' },
@@ -27,17 +28,6 @@ const STATES = [
   { value: 'NT', label: 'NT' },
 ];
 
-// Transport costs (depot-to-depot)
-const transportCosts: Record<string, Record<string, number>> = {
-  'NSW': { 'NSW': 0, 'VIC': 770, 'QLD': 880, 'SA': 1100, 'WA': 2200, 'TAS': 1320, 'ACT': 330, 'NT': 2420 },
-  'VIC': { 'NSW': 770, 'VIC': 0, 'QLD': 1210, 'SA': 770, 'WA': 2420, 'TAS': 880, 'ACT': 880, 'NT': 2640 },
-  'QLD': { 'NSW': 880, 'VIC': 1210, 'QLD': 0, 'SA': 1540, 'WA': 2860, 'TAS': 1650, 'ACT': 990, 'NT': 1980 },
-  'SA': { 'NSW': 1100, 'VIC': 770, 'QLD': 1540, 'SA': 0, 'WA': 1760, 'TAS': 1320, 'ACT': 1100, 'NT': 2200 },
-  'WA': { 'NSW': 2200, 'VIC': 2420, 'QLD': 2860, 'SA': 1760, 'WA': 0, 'TAS': 2860, 'ACT': 2310, 'NT': 2640 },
-  'TAS': { 'NSW': 1320, 'VIC': 880, 'QLD': 1650, 'SA': 1320, 'WA': 2860, 'TAS': 0, 'ACT': 1320, 'NT': 2860 },
-  'ACT': { 'NSW': 330, 'VIC': 880, 'QLD': 990, 'SA': 1100, 'WA': 2310, 'TAS': 1320, 'ACT': 0, 'NT': 2530 },
-  'NT': { 'NSW': 2420, 'VIC': 2640, 'QLD': 1980, 'SA': 2200, 'WA': 2640, 'TAS': 2860, 'ACT': 2530, 'NT': 0 },
-};
 
 interface ListingWithImages extends MarketplaceListing {
   images: ListingImage[];
@@ -168,7 +158,7 @@ export default function MarketplaceListingPage({ params }: { params: Promise<{ i
   // Calculate costs
   const price = listing.price;
   const isInterstate = listing.seller_state !== deliveryState;
-  const transport = isInterstate ? (transportCosts[listing.seller_state]?.[deliveryState] || 1000) : 0;
+  const transport = isInterstate ? getTransportCost(listing.seller_state as any, deliveryState as any) : 0;
   const isEV = listing.fuel_type === 'electric';
   const stampDuty = calculateStampDuty({ state: deliveryState, price, isEV });
   const regoResult = calculateRego({ state: deliveryState, term: 12, ev: isEV, cylinders: listing.cylinders || 4 });

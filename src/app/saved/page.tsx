@@ -1,111 +1,140 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatPrice, formatNumber, formatRelativeDate } from '@/lib/utils/format';
-import { Heart, Trash2, ExternalLink, Bell, Search, MapPin } from 'lucide-react';
+import { Heart, Trash2, ExternalLink, Bell, Search, MapPin, Loader2 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
-// Mock saved cars
-const MOCK_SAVED_CARS = [
-  {
-    id: '1',
-    listing: {
-      id: '1',
-      make: 'Mini',
-      model: 'Cooper SE',
-      year: 2023,
-      price: 52990,
-      odometer: 12500,
-      sellerState: 'VIC',
-      sellerSuburb: 'Richmond',
-      image: 'https://via.placeholder.com/400x300?text=Mini+Cooper+SE',
-      isActive: true,
-    },
-    deliveryState: 'NSW',
-    totalDelivered: 56560,
-    savedAt: '2024-01-10T10:30:00Z',
-  },
-  {
-    id: '2',
-    listing: {
-      id: '2',
-      make: 'Tesla',
-      model: 'Model 3',
-      year: 2023,
-      price: 55990,
-      odometer: 15000,
-      sellerState: 'NSW',
-      sellerSuburb: 'Parramatta',
-      image: 'https://via.placeholder.com/400x300?text=Tesla+Model+3',
-      isActive: true,
-    },
-    deliveryState: 'NSW',
-    totalDelivered: 59080,
-    savedAt: '2024-01-08T14:20:00Z',
-  },
-];
+interface SavedCar {
+  id: string;
+  listing_id: string;
+  delivery_state: string;
+  total_delivered: number | null;
+  created_at: string;
+  listing: {
+    id: string;
+    make: string;
+    model: string;
+    year: number;
+    price: number;
+    odometer: number | null;
+    seller_state: string;
+    seller_suburb: string | null;
+    title: string;
+    status: string;
+    images: { url: string }[];
+  };
+}
 
-// Mock saved searches
-const MOCK_SAVED_SEARCHES = [
-  {
-    id: '1',
-    name: 'Electric Hatchbacks',
-    criteria: {
-      query: 'electric hatchback',
-      maxPrice: 60000,
-      fuelType: 'electric',
-    },
-    deliveryState: 'NSW',
-    deliveryPostcode: '2000',
-    emailAlerts: true,
-    resultsCount: 45,
-    createdAt: '2024-01-05T09:00:00Z',
-  },
-  {
-    id: '2',
-    name: 'Mini Cooper',
-    criteria: {
-      make: 'Mini',
-      model: 'Cooper',
-      minYear: 2020,
-    },
-    deliveryState: 'NSW',
-    deliveryPostcode: '2000',
-    emailAlerts: false,
-    resultsCount: 28,
-    createdAt: '2024-01-03T16:45:00Z',
-  },
-];
+interface SavedSearch {
+  id: string;
+  name: string;
+  criteria: Record<string, unknown>;
+  delivery_state: string;
+  delivery_postcode: string | null;
+  email_alerts: boolean;
+  last_results_count: number;
+  created_at: string;
+}
 
 type Tab = 'cars' | 'searches';
 
 export default function SavedPage() {
   const [activeTab, setActiveTab] = useState<Tab>('cars');
-  const [savedCars, setSavedCars] = useState(MOCK_SAVED_CARS);
-  const [savedSearches, setSavedSearches] = useState(MOCK_SAVED_SEARCHES);
+  const [savedCars, setSavedCars] = useState<SavedCar[]>([]);
+  const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
-  // Check if user is logged in (mock)
-  const isLoggedIn = true;
+  useEffect(() => {
+    checkAuthAndFetchData();
+  }, []);
 
-  const removeSavedCar = (id: string) => {
-    setSavedCars(savedCars.filter(c => c.id !== id));
+  const checkAuthAndFetchData = async () => {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      setIsLoggedIn(false);
+      setLoading(false);
+      return;
+    }
+
+    setIsLoggedIn(true);
+
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: cars } = await (supabase as any)
+        .from('saved_cars')
+        .select(`
+          id, listing_id, delivery_state, total_delivered, created_at,
+          listing:marketplace_listings(id, make, model, year, price, odometer,
+            seller_state, seller_suburb, title, status, images:listing_images(url))
+        `)
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (cars) setSavedCars(cars);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: searches } = await (supabase as any)
+        .from('saved_searches')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (searches) setSavedSearches(searches);
+    } catch (err) {
+      console.error('Error fetching saved items:', err);
+    }
+
+    setLoading(false);
   };
 
-  const removeSavedSearch = (id: string) => {
-    setSavedSearches(savedSearches.filter(s => s.id !== id));
+  const removeSavedCar = async (id: string) => {
+    const supabase = createClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any).from('saved_cars').delete().eq('id', id);
+    if (!error) setSavedCars(savedCars.filter(c => c.id !== id));
   };
 
-  const toggleSearchAlerts = (id: string) => {
-    setSavedSearches(savedSearches.map(s =>
-      s.id === id ? { ...s, emailAlerts: !s.emailAlerts } : s
-    ));
+  const removeSavedSearch = async (id: string) => {
+    const supabase = createClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any).from('saved_searches').delete().eq('id', id);
+    if (!error) setSavedSearches(savedSearches.filter(s => s.id !== id));
   };
 
-  if (!isLoggedIn) {
+  const toggleSearchAlerts = async (id: string) => {
+    const search = savedSearches.find(s => s.id === id);
+    if (!search) return;
+    const supabase = createClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any)
+      .from('saved_searches')
+      .update({ email_alerts: !search.email_alerts })
+      .eq('id', id);
+    if (!error) {
+      setSavedSearches(savedSearches.map(s =>
+        s.id === id ? { ...s, email_alerts: !s.email_alerts } : s
+      ));
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-purple-700" />
+      </div>
+    );
+  }
+
+  if (isLoggedIn === false) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center px-4">
         <Card className="max-w-md text-center">
@@ -146,7 +175,7 @@ export default function SavedPage() {
             onClick={() => setActiveTab('cars')}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 -mb-px ${
               activeTab === 'cars'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-purple-700 text-purple-700'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -157,7 +186,7 @@ export default function SavedPage() {
             onClick={() => setActiveTab('searches')}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 -mb-px ${
               activeTab === 'searches'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-purple-700 text-purple-700'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -189,13 +218,19 @@ export default function SavedPage() {
                     <div className="flex gap-4">
                       {/* Image */}
                       <div className="relative h-24 w-32 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                        <Image
-                          src={saved.listing.image}
-                          alt={`${saved.listing.year} ${saved.listing.make} ${saved.listing.model}`}
-                          fill
-                          className="object-cover"
-                        />
-                        {!saved.listing.isActive && (
+                        {saved.listing?.images?.[0]?.url ? (
+                          <Image
+                            src={saved.listing.images[0].url}
+                            alt={saved.listing.title || 'Car'}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-gray-400">
+                            <Heart className="h-8 w-8" />
+                          </div>
+                        )}
+                        {saved.listing?.status !== 'active' && (
                           <div className="absolute inset-0 flex items-center justify-center bg-black/60">
                             <Badge variant="destructive">Sold</Badge>
                           </div>
@@ -207,16 +242,18 @@ export default function SavedPage() {
                         <div className="flex items-start justify-between">
                           <div>
                             <Link
-                              href={`/car/${saved.listing.id}`}
-                              className="font-semibold text-gray-900 hover:text-blue-600"
+                              href={`/marketplace/${saved.listing_id}`}
+                              className="font-semibold text-gray-900 hover:text-purple-700"
                             >
-                              {saved.listing.year} {saved.listing.make} {saved.listing.model}
+                              {saved.listing?.year} {saved.listing?.make} {saved.listing?.model}
                             </Link>
                             <div className="mt-1 flex items-center gap-3 text-sm text-gray-500">
-                              <span>{formatNumber(saved.listing.odometer)} km</span>
+                              {saved.listing?.odometer && (
+                                <span>{formatNumber(saved.listing.odometer)} km</span>
+                              )}
                               <span className="flex items-center gap-1">
                                 <MapPin className="h-3 w-3" />
-                                {saved.listing.sellerSuburb}, {saved.listing.sellerState}
+                                {saved.listing?.seller_suburb || saved.listing?.seller_state}, {saved.listing?.seller_state}
                               </span>
                             </div>
                           </div>
@@ -232,15 +269,17 @@ export default function SavedPage() {
                           <div className="flex gap-4">
                             <div>
                               <p className="text-xs text-gray-500">Listed</p>
-                              <p className="font-medium">{formatPrice(saved.listing.price)}</p>
+                              <p className="font-medium">{formatPrice(saved.listing?.price || 0)}</p>
                             </div>
-                            <div>
-                              <p className="text-xs text-gray-500">Delivered to {saved.deliveryState}</p>
-                              <p className="font-bold text-blue-600">{formatPrice(saved.totalDelivered)}</p>
-                            </div>
+                            {saved.total_delivered && (
+                              <div>
+                                <p className="text-xs text-gray-500">Delivered to {saved.delivery_state}</p>
+                                <p className="font-bold text-purple-700">{formatPrice(saved.total_delivered)}</p>
+                              </div>
+                            )}
                           </div>
                           <div className="text-right text-xs text-gray-400">
-                            Saved {formatRelativeDate(saved.savedAt)}
+                            Saved {formatRelativeDate(saved.created_at)}
                           </div>
                         </div>
                       </div>
@@ -266,14 +305,16 @@ export default function SavedPage() {
             </Card>
           ) : (
             <div className="space-y-4">
-              {savedSearches.map((search) => (
+              {savedSearches.map((search) => {
+                const criteria = search.criteria as Record<string, unknown>;
+                return (
                 <Card key={search.id}>
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3">
                           <h3 className="font-semibold text-gray-900">{search.name}</h3>
-                          {search.emailAlerts && (
+                          {search.email_alerts && (
                             <Badge variant="secondary" className="gap-1">
                               <Bell className="h-3 w-3" />
                               Alerts on
@@ -281,15 +322,15 @@ export default function SavedPage() {
                           )}
                         </div>
                         <div className="mt-1 flex flex-wrap gap-2 text-sm text-gray-500">
-                          {search.criteria.query && <span>"{search.criteria.query}"</span>}
-                          {search.criteria.make && <span>{search.criteria.make}</span>}
-                          {search.criteria.model && <span>{search.criteria.model}</span>}
-                          {search.criteria.maxPrice && <span>Under {formatPrice(search.criteria.maxPrice)}</span>}
-                          {search.criteria.fuelType && <span className="capitalize">{search.criteria.fuelType}</span>}
-                          {search.criteria.minYear && <span>{search.criteria.minYear}+</span>}
+                          {criteria.query ? <span>&quot;{String(criteria.query)}&quot;</span> : null}
+                          {criteria.make ? <span>{String(criteria.make)}</span> : null}
+                          {criteria.model ? <span>{String(criteria.model)}</span> : null}
+                          {criteria.maxPrice ? <span>Under {formatPrice(Number(criteria.maxPrice))}</span> : null}
+                          {criteria.fuelType ? <span className="capitalize">{String(criteria.fuelType)}</span> : null}
+                          {criteria.minYear ? <span>{String(criteria.minYear)}+</span> : null}
                         </div>
                         <p className="mt-2 text-sm text-gray-600">
-                          {search.resultsCount} results • Delivering to {search.deliveryState} {search.deliveryPostcode}
+                          {search.last_results_count} results • Delivering to {search.delivery_state} {search.delivery_postcode}
                         </p>
                       </div>
 
@@ -298,7 +339,7 @@ export default function SavedPage() {
                           variant="ghost"
                           size="icon"
                           onClick={() => toggleSearchAlerts(search.id)}
-                          className={search.emailAlerts ? 'text-blue-600' : 'text-gray-400'}
+                          className={search.email_alerts ? 'text-purple-700' : 'text-gray-400'}
                         >
                           <Bell className="h-5 w-5" />
                         </Button>
@@ -312,8 +353,8 @@ export default function SavedPage() {
                         </Button>
                         <Button asChild>
                           <Link href={`/search?${new URLSearchParams(
-                            Object.entries(search.criteria).reduce((acc, [key, value]) => {
-                              if (value !== undefined) acc[key] = String(value);
+                            Object.entries(criteria).reduce((acc, [key, value]) => {
+                              if (value !== undefined && value !== null) acc[key] = String(value);
                               return acc;
                             }, {} as Record<string, string>)
                           ).toString()}`}>
@@ -325,7 +366,8 @@ export default function SavedPage() {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
+                );
+              })}
             </div>
           )
         )}

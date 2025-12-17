@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Car, Mail, Lock, User, MapPin, Loader2 } from 'lucide-react';
+import { Car, Mail, Lock, User, MapPin, Loader2, CheckCircle } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 const AUSTRALIAN_STATES = [
   { value: 'NSW', label: 'New South Wales' },
@@ -32,6 +33,7 @@ export default function SignupPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [emailSent, setEmailSent] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -55,40 +57,96 @@ export default function SignupPage() {
     }
 
     try {
-      // TODO: Implement Supabase auth
-      // const { error } = await supabase.auth.signUp({
-      //   email: formData.email,
-      //   password: formData.password,
-      //   options: {
-      //     data: {
-      //       name: formData.name,
-      //       state: formData.state,
-      //       postcode: formData.postcode,
-      //     }
-      //   }
-      // });
-      // if (error) throw error;
+      const supabase = createClient();
 
-      // Mock signup for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      router.push('/auth/login?registered=true');
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            name: formData.name,
+            state: formData.state,
+            postcode: formData.postcode,
+          },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        }
+      });
+
+      if (signUpError) {
+        if (signUpError.message.includes('already registered')) {
+          setError('This email is already registered. Please sign in instead.');
+        } else {
+          setError(signUpError.message);
+        }
+        return;
+      }
+
+      // Check if email confirmation is required
+      if (data.user && !data.session) {
+        // Email confirmation required
+        setEmailSent(true);
+      } else if (data.session) {
+        // No email confirmation (for development)
+        router.push('/');
+      }
     } catch (err) {
+      console.error('Signup error:', err);
       setError('Failed to create account. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
+  // Show confirmation message after signup
+  if (emailSent) {
+    return (
+      <div className="flex min-h-[80vh] items-center justify-center px-4 py-8">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+              <CheckCircle className="h-7 w-7 text-green-600" />
+            </div>
+            <CardTitle className="text-2xl">Check your email</CardTitle>
+            <CardDescription className="mt-2">
+              We&apos;ve sent a confirmation link to <strong>{formData.email}</strong>
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center">
+            <p className="text-sm text-gray-600 mb-6">
+              Click the link in the email to verify your account and get started.
+              The link will expire in 24 hours.
+            </p>
+            <div className="space-y-3">
+              <p className="text-xs text-gray-500">
+                Didn&apos;t receive the email? Check your spam folder or
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => setEmailSent(false)}
+                className="w-full"
+              >
+                Try a different email
+              </Button>
+              <Link href="/auth/login" className="block text-sm text-purple-700 hover:underline">
+                Already verified? Sign in
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-8">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-700">
             <Car className="h-7 w-7 text-white" />
           </div>
           <CardTitle className="text-2xl">Create an account</CardTitle>
           <CardDescription>
-            Save your favourite cars and track prices
+            Save your favourite cars, list vehicles for sale, and track prices
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -215,16 +273,16 @@ export default function SignupPage() {
               <input
                 type="checkbox"
                 id="terms"
-                className="mt-1 h-4 w-4 rounded border-gray-300"
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-500"
                 required
               />
               <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
                 I agree to the{' '}
-                <Link href="/terms" className="text-blue-600 hover:underline">
+                <Link href="/terms" className="text-purple-700 hover:underline">
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link href="/privacy" className="text-blue-600 hover:underline">
+                <Link href="/privacy" className="text-purple-700 hover:underline">
                   Privacy Policy
                 </Link>
               </label>
@@ -244,7 +302,7 @@ export default function SignupPage() {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <Link href="/auth/login" className="font-medium text-blue-600 hover:underline">
+            <Link href="/auth/login" className="font-medium text-purple-700 hover:underline">
               Sign in
             </Link>
           </p>

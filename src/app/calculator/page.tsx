@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import type { AustralianState, FuelType } from '@/lib/types/car';
 import { calculateRego } from '@/lib/calculators/registration';
+import { getTransportCostMatrix } from '@/lib/calculators/transport';
 
 const STATES: { value: AustralianState; label: string }[] = [
   { value: 'NSW', label: 'New South Wales' },
@@ -135,18 +136,8 @@ export default function CalculatorPage() {
       transport_type: transportType,
     });
 
-    // Transport costs: depot-to-depot quotes + 10% margin (sedan rates, Dec 2024)
-    // Based on real carrier quotes for standard sedans
-    const transportCosts: Record<string, Record<string, number>> = {
-      'NSW': { 'NSW': 0, 'VIC': 770, 'QLD': 880, 'SA': 1100, 'WA': 2200, 'TAS': 1320, 'ACT': 330, 'NT': 2420 },
-      'VIC': { 'NSW': 770, 'VIC': 0, 'QLD': 1210, 'SA': 770, 'WA': 2420, 'TAS': 880, 'ACT': 880, 'NT': 2640 },
-      'QLD': { 'NSW': 880, 'VIC': 1210, 'QLD': 0, 'SA': 1540, 'WA': 2860, 'TAS': 1650, 'ACT': 990, 'NT': 1980 },
-      'SA': { 'NSW': 1100, 'VIC': 770, 'QLD': 1540, 'SA': 0, 'WA': 1650, 'TAS': 1210, 'ACT': 1210, 'NT': 1980 },
-      'WA': { 'NSW': 2200, 'VIC': 2420, 'QLD': 2860, 'SA': 1650, 'WA': 0, 'TAS': 2860, 'ACT': 2310, 'NT': 2200 },
-      'TAS': { 'NSW': 1320, 'VIC': 880, 'QLD': 1650, 'SA': 1210, 'WA': 2860, 'TAS': 0, 'ACT': 1430, 'NT': 2860 },
-      'ACT': { 'NSW': 330, 'VIC': 880, 'QLD': 990, 'SA': 1210, 'WA': 2310, 'TAS': 1430, 'ACT': 0, 'NT': 2530 },
-      'NT': { 'NSW': 2420, 'VIC': 2640, 'QLD': 1980, 'SA': 1980, 'WA': 2200, 'TAS': 2860, 'ACT': 2530, 'NT': 0 },
-    };
+    // Transport costs from centralized utility (can fetch from Supabase)
+    const transportCosts = getTransportCostMatrix();
 
     const calculateStampDuty = (state: AustralianState, price: number, fuelType: FuelType): number => {
       const isEV = fuelType === 'electric';

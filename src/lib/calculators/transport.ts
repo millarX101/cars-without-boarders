@@ -1,6 +1,6 @@
 /**
  * Australian Vehicle Transport Cost Calculator
- * Based on industry averages for car transport (2025)
+ * Fetches from Supabase transport_routes table with hardcoded fallback
  */
 
 import type { AustralianState } from '@/lib/types/car';
@@ -23,90 +23,137 @@ export interface TransportResult {
   notes?: string;
 }
 
-// Base rates per interstate route (bidirectional - use sorted key)
-const BASE_ROUTES: Record<
-  string,
-  { base: number; perKm: number; daysMin: number; daysMax: number }
-> = {
-  'ACT-NSW': { base: 200, perKm: 0.55, daysMin: 1, daysMax: 2 },
-  'ACT-NT': { base: 1200, perKm: 0.38, daysMin: 6, daysMax: 9 },
-  'ACT-QLD': { base: 600, perKm: 0.44, daysMin: 3, daysMax: 5 },
-  'ACT-SA': { base: 700, perKm: 0.46, daysMin: 4, daysMax: 6 },
-  'ACT-TAS': { base: 900, perKm: 0.44, daysMin: 4, daysMax: 6 },
-  'ACT-VIC': { base: 450, perKm: 0.48, daysMin: 2, daysMax: 4 },
-  'ACT-WA': { base: 1100, perKm: 0.36, daysMin: 7, daysMax: 10 },
-  'NSW-NT': { base: 1200, perKm: 0.38, daysMin: 6, daysMax: 9 },
-  'NSW-QLD': { base: 500, perKm: 0.42, daysMin: 3, daysMax: 5 },
-  'NSW-SA': { base: 650, perKm: 0.45, daysMin: 4, daysMax: 6 },
-  'NSW-TAS': { base: 850, perKm: 0.45, daysMin: 4, daysMax: 6 },
-  'NSW-VIC': { base: 400, perKm: 0.45, daysMin: 2, daysMax: 4 },
-  'NSW-WA': { base: 1000, perKm: 0.35, daysMin: 7, daysMax: 10 },
-  'NT-QLD': { base: 1100, perKm: 0.38, daysMin: 5, daysMax: 8 },
-  'NT-SA': { base: 1000, perKm: 0.4, daysMin: 5, daysMax: 8 },
-  'NT-TAS': { base: 1400, perKm: 0.35, daysMin: 8, daysMax: 12 },
-  'NT-VIC': { base: 1300, perKm: 0.36, daysMin: 7, daysMax: 10 },
-  'NT-WA': { base: 1100, perKm: 0.36, daysMin: 5, daysMax: 8 },
-  'QLD-SA': { base: 900, perKm: 0.38, daysMin: 5, daysMax: 8 },
-  'QLD-TAS': { base: 1000, perKm: 0.42, daysMin: 5, daysMax: 8 },
-  'QLD-VIC': { base: 600, perKm: 0.4, daysMin: 4, daysMax: 6 },
-  'QLD-WA': { base: 1200, perKm: 0.32, daysMin: 8, daysMax: 12 },
-  'SA-TAS': { base: 800, perKm: 0.46, daysMin: 4, daysMax: 6 },
-  'SA-VIC': { base: 400, perKm: 0.48, daysMin: 2, daysMax: 4 },
-  'SA-WA': { base: 900, perKm: 0.38, daysMin: 4, daysMax: 7 },
-  'TAS-VIC': { base: 700, perKm: 0.5, daysMin: 3, daysMax: 5 },
-  'TAS-WA': { base: 1300, perKm: 0.34, daysMin: 8, daysMax: 12 },
-  'VIC-WA': { base: 1100, perKm: 0.35, daysMin: 7, daysMax: 10 },
+export interface TransportRoute {
+  from_state: string;
+  to_state: string;
+  base_price: number;
+  per_km_rate: number;
+  estimated_days_min: number;
+  estimated_days_max: number;
+  notes: string | null;
+}
+
+// Fallback transport costs (depot-to-depot, real carrier quotes + 10% margin, Dec 2024)
+// Used if database fetch fails
+const FALLBACK_TRANSPORT_COSTS: Record<string, Record<string, number>> = {
+  'NSW': { 'NSW': 0, 'VIC': 770, 'QLD': 880, 'SA': 1100, 'WA': 2200, 'TAS': 1320, 'ACT': 330, 'NT': 2420 },
+  'VIC': { 'NSW': 770, 'VIC': 0, 'QLD': 1210, 'SA': 770, 'WA': 2420, 'TAS': 880, 'ACT': 880, 'NT': 2640 },
+  'QLD': { 'NSW': 880, 'VIC': 1210, 'QLD': 0, 'SA': 1540, 'WA': 2860, 'TAS': 1650, 'ACT': 990, 'NT': 1980 },
+  'SA': { 'NSW': 1100, 'VIC': 770, 'QLD': 1540, 'SA': 0, 'WA': 1650, 'TAS': 1210, 'ACT': 1210, 'NT': 1980 },
+  'WA': { 'NSW': 2200, 'VIC': 2420, 'QLD': 2860, 'SA': 1650, 'WA': 0, 'TAS': 2860, 'ACT': 2310, 'NT': 2200 },
+  'TAS': { 'NSW': 1320, 'VIC': 880, 'QLD': 1650, 'SA': 1210, 'WA': 2860, 'TAS': 0, 'ACT': 1430, 'NT': 2750 },
+  'ACT': { 'NSW': 330, 'VIC': 880, 'QLD': 990, 'SA': 1210, 'WA': 2310, 'TAS': 1430, 'ACT': 0, 'NT': 2530 },
+  'NT': { 'NSW': 2420, 'VIC': 2640, 'QLD': 1980, 'SA': 1980, 'WA': 2200, 'TAS': 2750, 'ACT': 2530, 'NT': 0 },
+};
+
+// Fallback estimated days
+const FALLBACK_DAYS: Record<string, Record<string, { min: number; max: number }>> = {
+  'NSW': { 'NSW': { min: 0, max: 0 }, 'VIC': { min: 2, max: 4 }, 'QLD': { min: 3, max: 5 }, 'SA': { min: 4, max: 6 }, 'WA': { min: 7, max: 10 }, 'TAS': { min: 4, max: 6 }, 'ACT': { min: 1, max: 2 }, 'NT': { min: 6, max: 9 } },
+  'VIC': { 'NSW': { min: 2, max: 4 }, 'VIC': { min: 0, max: 0 }, 'QLD': { min: 4, max: 6 }, 'SA': { min: 2, max: 4 }, 'WA': { min: 7, max: 10 }, 'TAS': { min: 3, max: 5 }, 'ACT': { min: 2, max: 4 }, 'NT': { min: 7, max: 10 } },
+  'QLD': { 'NSW': { min: 3, max: 5 }, 'VIC': { min: 4, max: 6 }, 'QLD': { min: 0, max: 0 }, 'SA': { min: 5, max: 8 }, 'WA': { min: 8, max: 12 }, 'TAS': { min: 5, max: 8 }, 'ACT': { min: 3, max: 5 }, 'NT': { min: 5, max: 8 } },
+  'SA': { 'NSW': { min: 4, max: 6 }, 'VIC': { min: 2, max: 4 }, 'QLD': { min: 5, max: 8 }, 'SA': { min: 0, max: 0 }, 'WA': { min: 4, max: 7 }, 'TAS': { min: 4, max: 6 }, 'ACT': { min: 4, max: 6 }, 'NT': { min: 5, max: 8 } },
+  'WA': { 'NSW': { min: 7, max: 10 }, 'VIC': { min: 7, max: 10 }, 'QLD': { min: 8, max: 12 }, 'SA': { min: 4, max: 7 }, 'WA': { min: 0, max: 0 }, 'TAS': { min: 8, max: 12 }, 'ACT': { min: 7, max: 10 }, 'NT': { min: 5, max: 8 } },
+  'TAS': { 'NSW': { min: 4, max: 6 }, 'VIC': { min: 3, max: 5 }, 'QLD': { min: 5, max: 8 }, 'SA': { min: 4, max: 6 }, 'WA': { min: 8, max: 12 }, 'TAS': { min: 0, max: 0 }, 'ACT': { min: 4, max: 6 }, 'NT': { min: 8, max: 12 } },
+  'ACT': { 'NSW': { min: 1, max: 2 }, 'VIC': { min: 2, max: 4 }, 'QLD': { min: 3, max: 5 }, 'SA': { min: 4, max: 6 }, 'WA': { min: 7, max: 10 }, 'TAS': { min: 4, max: 6 }, 'ACT': { min: 0, max: 0 }, 'NT': { min: 6, max: 9 } },
+  'NT': { 'NSW': { min: 6, max: 9 }, 'VIC': { min: 7, max: 10 }, 'QLD': { min: 5, max: 8 }, 'SA': { min: 5, max: 8 }, 'WA': { min: 5, max: 8 }, 'TAS': { min: 8, max: 12 }, 'ACT': { min: 6, max: 9 }, 'NT': { min: 0, max: 0 } },
 };
 
 // Approximate distances between state capitals (km)
-const STATE_CAPITAL_DISTANCES: Record<string, number> = {
-  'ACT-NSW': 280,
-  'ACT-NT': 3900,
-  'ACT-QLD': 1200,
-  'ACT-SA': 1200,
-  'ACT-TAS': 850,
-  'ACT-VIC': 660,
-  'ACT-WA': 3900,
-  'NSW-NT': 4000,
-  'NSW-QLD': 920,
-  'NSW-SA': 1400,
-  'NSW-TAS': 1050,
-  'NSW-VIC': 880,
-  'NSW-WA': 4100,
-  'NT-QLD': 2800,
-  'NT-SA': 3000,
-  'NT-TAS': 4200,
-  'NT-VIC': 3750,
-  'NT-WA': 4000,
-  'QLD-SA': 2000,
-  'QLD-TAS': 2100,
-  'QLD-VIC': 1700,
-  'QLD-WA': 4400,
-  'SA-TAS': 1100,
-  'SA-VIC': 730,
-  'SA-WA': 2700,
-  'TAS-VIC': 450,
-  'TAS-WA': 3500,
-  'VIC-WA': 3400,
+const STATE_CAPITAL_DISTANCES: Record<string, Record<string, number>> = {
+  'NSW': { 'NSW': 0, 'VIC': 880, 'QLD': 920, 'SA': 1400, 'WA': 4100, 'TAS': 1050, 'ACT': 280, 'NT': 4000 },
+  'VIC': { 'NSW': 880, 'VIC': 0, 'QLD': 1700, 'SA': 730, 'WA': 3400, 'TAS': 450, 'ACT': 660, 'NT': 3750 },
+  'QLD': { 'NSW': 920, 'VIC': 1700, 'QLD': 0, 'SA': 2000, 'WA': 4400, 'TAS': 2100, 'ACT': 1200, 'NT': 2800 },
+  'SA': { 'NSW': 1400, 'VIC': 730, 'QLD': 2000, 'SA': 0, 'WA': 2700, 'TAS': 1100, 'ACT': 1200, 'NT': 3000 },
+  'WA': { 'NSW': 4100, 'VIC': 3400, 'QLD': 4400, 'SA': 2700, 'WA': 0, 'TAS': 3500, 'ACT': 3900, 'NT': 4000 },
+  'TAS': { 'NSW': 1050, 'VIC': 450, 'QLD': 2100, 'SA': 1100, 'WA': 3500, 'TAS': 0, 'ACT': 850, 'NT': 4200 },
+  'ACT': { 'NSW': 280, 'VIC': 660, 'QLD': 1200, 'SA': 1200, 'WA': 3900, 'TAS': 850, 'ACT': 0, 'NT': 3900 },
+  'NT': { 'NSW': 4000, 'VIC': 3750, 'QLD': 2800, 'SA': 3000, 'WA': 4000, 'TAS': 4200, 'ACT': 3900, 'NT': 0 },
 };
 
-// Intra-state average distances (from regional areas to capital)
-const INTRA_STATE_AVG_DISTANCE: Record<string, number> = {
-  NSW: 350,
-  VIC: 250,
-  QLD: 500,
-  SA: 350,
-  WA: 600,
-  TAS: 200,
-  ACT: 50,
-  NT: 400,
-};
+// Cache for transport routes from database
+let cachedRoutes: Map<string, TransportRoute> | null = null;
+let cacheTimestamp: number = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 /**
- * Get route key (sorted alphabetically for bidirectional lookup)
+ * Fetch transport routes from Supabase
  */
-function getRouteKey(state1: string, state2: string): string {
-  return [state1, state2].sort().join('-');
+export async function fetchTransportRoutes(): Promise<Map<string, TransportRoute>> {
+  // Return cached data if still valid
+  if (cachedRoutes && Date.now() - cacheTimestamp < CACHE_TTL) {
+    return cachedRoutes;
+  }
+
+  try {
+    const response = await fetch('/api/transport-routes');
+    if (!response.ok) {
+      throw new Error('Failed to fetch transport routes');
+    }
+
+    const data = await response.json();
+    const routes = new Map<string, TransportRoute>();
+
+    for (const route of data.routes || []) {
+      const key = `${route.from_state}-${route.to_state}`;
+      routes.set(key, route);
+    }
+
+    cachedRoutes = routes;
+    cacheTimestamp = Date.now();
+    return routes;
+  } catch (error) {
+    console.warn('Failed to fetch transport routes, using fallback:', error);
+    return new Map();
+  }
+}
+
+/**
+ * Get transport cost for a route (synchronous, uses fallback)
+ */
+export function getTransportCost(
+  fromState: AustralianState,
+  toState: AustralianState
+): number {
+  return FALLBACK_TRANSPORT_COSTS[fromState]?.[toState] ?? 0;
+}
+
+/**
+ * Get transport cost for a route (async, fetches from database)
+ */
+export async function getTransportCostAsync(
+  fromState: AustralianState,
+  toState: AustralianState
+): Promise<{ cost: number; daysMin: number; daysMax: number; notes: string | null }> {
+  const routes = await fetchTransportRoutes();
+  const key = `${fromState}-${toState}`;
+  const route = routes.get(key);
+
+  if (route) {
+    return {
+      cost: Number(route.base_price),
+      daysMin: route.estimated_days_min,
+      daysMax: route.estimated_days_max,
+      notes: route.notes,
+    };
+  }
+
+  // Fallback to hardcoded values
+  const cost = FALLBACK_TRANSPORT_COSTS[fromState]?.[toState] ?? 0;
+  const days = FALLBACK_DAYS[fromState]?.[toState] ?? { min: 5, max: 10 };
+
+  return {
+    cost,
+    daysMin: days.min,
+    daysMax: days.max,
+    notes: null,
+  };
+}
+
+/**
+ * Get all transport costs as a matrix (for bulk operations)
+ */
+export function getTransportCostMatrix(): Record<string, Record<string, number>> {
+  return FALLBACK_TRANSPORT_COSTS;
 }
 
 /**
@@ -115,81 +162,31 @@ function getRouteKey(state1: string, state2: string): string {
 export function calculateTransport(input: TransportInput): TransportResult {
   const { fromState, toState } = input;
 
-  // Same state = intra-state or local pickup
+  // Same state = no transport
   if (fromState === toState) {
-    return calculateIntraStateTransport(fromState);
-  }
-
-  return calculateInterStateTransport(fromState, toState);
-}
-
-/**
- * Calculate intra-state transport cost
- */
-function calculateIntraStateTransport(state: AustralianState): TransportResult {
-  const avgDistance = INTRA_STATE_AVG_DISTANCE[state] || 300;
-
-  // For very short distances, assume local pickup is possible
-  if (avgDistance < 100) {
     return {
       cost: 0,
       type: 'pickup',
-      distance: avgDistance,
-      estimatedDays: { min: 0, max: 1 },
-      notes: 'Local pickup - no transport cost',
+      distance: 0,
+      estimatedDays: { min: 0, max: 0 },
+      notes: 'Same state - no transport needed',
     };
   }
 
-  // Intra-state transport rate
-  const cost = Math.round(150 + avgDistance * 0.55);
+  const cost = getTransportCost(fromState, toState);
+  const distance = STATE_CAPITAL_DISTANCES[fromState]?.[toState] ?? 1500;
+  const days = FALLBACK_DAYS[fromState]?.[toState] ?? { min: 5, max: 10 };
+
+  const includesFerry = fromState === 'TAS' || toState === 'TAS';
 
   return {
     cost,
-    type: 'intra-state',
-    distance: avgDistance,
-    estimatedDays: { min: 1, max: 3 },
-    notes: `Estimated ${state} intra-state transport`,
-  };
-}
-
-/**
- * Calculate interstate transport cost
- */
-function calculateInterStateTransport(
-  fromState: AustralianState,
-  toState: AustralianState
-): TransportResult {
-  const routeKey = getRouteKey(fromState, toState);
-
-  // Get route data or use default
-  const route = BASE_ROUTES[routeKey] || {
-    base: 800,
-    perKm: 0.4,
-    daysMin: 5,
-    daysMax: 10,
-  };
-
-  // Get distance
-  const distance = STATE_CAPITAL_DISTANCES[routeKey] || 1500;
-
-  // Calculate cost: base + (distance * per_km) with diminishing returns over 1000km
-  let cost = route.base;
-  if (distance <= 1000) {
-    cost += distance * route.perKm;
-  } else {
-    cost += 1000 * route.perKm;
-    cost += (distance - 1000) * (route.perKm * 0.7); // 30% discount over 1000km
-  }
-
-  return {
-    cost: Math.round(cost),
     type: 'interstate',
     distance,
-    estimatedDays: {
-      min: route.daysMin,
-      max: route.daysMax,
-    },
-    notes: `${fromState} to ${toState} open carrier transport`,
+    estimatedDays: days,
+    notes: includesFerry
+      ? `${fromState} to ${toState} (includes ferry)`
+      : `${fromState} to ${toState} depot-to-depot`,
   };
 }
 
