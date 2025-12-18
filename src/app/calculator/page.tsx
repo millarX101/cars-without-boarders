@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import type { AustralianState, FuelType } from '@/lib/types/car';
 import { calculateRego } from '@/lib/calculators/registration';
+import { calculateStampDuty } from '@/lib/calculators/stamp-duty';
 import { getTransportCostMatrix } from '@/lib/calculators/transport';
 
 const STATES: { value: AustralianState; label: string }[] = [
@@ -139,38 +140,6 @@ export default function CalculatorPage() {
     // Transport costs from centralized utility (can fetch from Supabase)
     const transportCosts = getTransportCostMatrix();
 
-    const calculateStampDuty = (state: AustralianState, price: number, fuelType: FuelType): number => {
-      const isEV = fuelType === 'electric';
-
-      if (isEV) {
-        if (state === 'NSW' || state === 'ACT' || state === 'SA') return 0;
-        if (state === 'VIC') return price * 0.029;
-      }
-
-      switch (state) {
-        case 'NSW':
-          if (price <= 45000) return price * 0.03;
-          return 1350 + (price - 45000) * 0.05;
-        case 'VIC':
-          return price * 0.042;
-        case 'QLD':
-          if (price <= 100000) return price * 0.03;
-          return 3000 + (price - 100000) * 0.05;
-        case 'SA':
-          return price * 0.04;
-        case 'WA':
-          return price * 0.0275;
-        case 'TAS':
-          return price * 0.03;
-        case 'ACT':
-          return price * 0.03;
-        case 'NT':
-          return price * 0.03;
-        default:
-          return price * 0.03;
-      }
-    };
-
     const roadworthyByState: Record<AustralianState, number> = {
       'NSW': 150, 'VIC': 180, 'QLD': 120, 'SA': 130, 'WA': 200, 'TAS': 140, 'ACT': 160, 'NT': 100,
     };
@@ -183,7 +152,14 @@ export default function CalculatorPage() {
       const isInterstate = car.sellerState !== deliveryState;
       const baseTransport = transportCosts[car.sellerState]?.[deliveryState] || 0;
       const transport = isInterstate ? baseTransport + doorToDoorFee : 0;
-      const stampDuty = Math.round(calculateStampDuty(deliveryState, price, car.fuelType));
+      const stampDuty = calculateStampDuty({
+        state: deliveryState,
+        price,
+        isEV: car.fuelType === 'electric',
+        isHybrid: car.fuelType === 'hybrid' || car.fuelType === 'plug-in-hybrid',
+        fuelType: car.fuelType,
+        cylinders: 4,
+      });
 
       // Use enhanced registration calculator (includes CTP/MII/MAI)
       const regoResult = calculateRego({
@@ -557,9 +533,9 @@ export default function CalculatorPage() {
             </div>
             <div className="rounded-lg bg-white p-6 shadow-sm">
               <Shield className="h-8 w-8 text-purple-600" />
-              <h3 className="mt-3 font-semibold text-gray-900">EV Benefits</h3>
+              <h3 className="mt-3 font-semibold text-gray-900">Updated Rates</h3>
               <p className="mt-2 text-sm text-gray-600">
-                Electric vehicles may qualify for stamp duty exemptions in NSW, ACT, and SA.
+                Stamp duty calculated using current state government rates. EV exemptions have ended in most states.
               </p>
             </div>
           </div>
