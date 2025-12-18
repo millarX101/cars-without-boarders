@@ -27,6 +27,10 @@ export const metadata: Metadata = {
       'Calculate the true delivered cost of any car in Australia. Compare stamp duty, registration, CTP, and transport costs across all states.',
     type: 'website',
     locale: 'en_AU',
+    url: 'https://landedx.com.au/calculator',
+  },
+  alternates: {
+    canonical: 'https://landedx.com.au/calculator',
   },
 };
 

@@ -1,8 +1,21 @@
+import type { Metadata } from 'next';
 import { Car, Users, Target, Shield } from 'lucide-react';
 
-export const metadata = {
-  title: 'About Us',
-  description: 'Learn about landedX - see the true delivered cost of any car in Australia.',
+export const metadata: Metadata = {
+  title: 'About landedX | Australian Car Cost Calculator',
+  description:
+    'landedX helps Australians find the best car deals across all states by showing the true delivered cost including transport, stamp duty, and registration.',
+  openGraph: {
+    title: 'About landedX | Australian Car Cost Calculator',
+    description:
+      'Helping Australians find the best car deals by calculating true delivered costs.',
+    type: 'website',
+    locale: 'en_AU',
+    url: 'https://landedx.com.au/about',
+  },
+  alternates: {
+    canonical: 'https://landedx.com.au/about',
+  },
 };
 
 export default function AboutPage() {

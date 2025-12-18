@@ -1,6 +1,27 @@
-export const metadata = {
-  title: 'FAQ',
-  description: 'Frequently asked questions about landedX and calculating true car costs in Australia.',
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'FAQ | Car Buying Questions Australia',
+  description:
+    'Frequently asked questions about buying cars interstate in Australia. Learn about stamp duty, registration, transport costs, and roadworthy certificates.',
+  keywords: [
+    'car buying FAQ Australia',
+    'stamp duty questions',
+    'interstate car buying tips',
+    'car transport questions',
+    'registration transfer Australia',
+  ],
+  openGraph: {
+    title: 'FAQ | Car Buying Questions Australia',
+    description:
+      'Answers to common questions about buying cars interstate in Australia.',
+    type: 'website',
+    locale: 'en_AU',
+    url: 'https://landedx.com.au/faq',
+  },
+  alternates: {
+    canonical: 'https://landedx.com.au/faq',
+  },
 };
 
 const faqs = [

@@ -20,6 +20,10 @@ export const metadata: Metadata = {
       'Find your perfect car from anywhere in Australia. See the true delivered price to your door.',
     type: 'website',
     locale: 'en_AU',
+    url: 'https://landedx.com.au/search',
+  },
+  alternates: {
+    canonical: 'https://landedx.com.au/search',
   },
 };
 

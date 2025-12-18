@@ -20,6 +20,10 @@ export const metadata: Metadata = {
       'List your car for free and reach buyers across Australia. Show them the true delivered cost.',
     type: 'website',
     locale: 'en_AU',
+    url: 'https://landedx.com.au/list-your-car',
+  },
+  alternates: {
+    canonical: 'https://landedx.com.au/list-your-car',
   },
 };
 

@@ -25,6 +25,10 @@ export const metadata: Metadata = {
       'Shop for used cars across all Australian states. Calculate the true delivered price to your door.',
     type: 'website',
     locale: 'en_AU',
+    url: 'https://landedx.com.au',
+  },
+  alternates: {
+    canonical: 'https://landedx.com.au',
   },
 };
 
