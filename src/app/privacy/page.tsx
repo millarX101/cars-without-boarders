@@ -7,11 +7,11 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-purple-700 to-purple-900 py-16">
+      <section className="bg-gradient-to-br from-fuchsia-700 to-fuchsia-900 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white sm:text-5xl">Privacy Policy</h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-purple-100">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-fuchsia-100">
               Last updated: December 2024
             </p>
           </div>
@@ -122,7 +122,7 @@ export default function PrivacyPage() {
                   If you have any questions about this Privacy Policy, please contact us at:
                 </p>
                 <p className="mt-2 text-gray-600">
-                  <a href="mailto:privacy@landedx.com.au" className="text-purple-700 hover:underline">
+                  <a href="mailto:privacy@landedx.com.au" className="text-fuchsia-700 hover:underline">
                     privacy@landedx.com.au
                   </a>
                 </p>

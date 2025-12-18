@@ -87,7 +87,7 @@ function LoginContent() {
     <div className="flex min-h-[80vh] items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-700">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-fuchsia-700">
             <Car className="h-7 w-7 text-white" />
           </div>
           <CardTitle className="text-2xl">Welcome back</CardTitle>
@@ -148,10 +148,10 @@ function LoginContent() {
 
             <div className="flex items-center justify-between">
               <label className="flex items-center">
-                <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-500" />
+                <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-fuchsia-700 focus:ring-fuchsia-500" />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <Link href="/auth/forgot-password" className="text-sm text-purple-700 hover:underline">
+              <Link href="/auth/forgot-password" className="text-sm text-fuchsia-700 hover:underline">
                 Forgot password?
               </Link>
             </div>
@@ -208,7 +208,7 @@ function LoginContent() {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Don&apos;t have an account?{' '}
-            <Link href="/auth/signup" className="font-medium text-purple-700 hover:underline">
+            <Link href="/auth/signup" className="font-medium text-fuchsia-700 hover:underline">
               Sign up
             </Link>
           </p>
@@ -222,7 +222,7 @@ export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="flex min-h-[80vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-700" />
+        <Loader2 className="h-8 w-8 animate-spin text-fuchsia-700" />
       </div>
     }>
       <LoginContent />

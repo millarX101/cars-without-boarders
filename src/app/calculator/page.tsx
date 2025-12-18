@@ -206,17 +206,17 @@ export default function CalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900 py-12">
+      <section className="bg-gradient-to-br from-fuchsia-600 via-fuchsia-700 to-fuchsia-900 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-purple-500/20 px-4 py-2 text-sm font-medium text-purple-100">
+            <div className="inline-flex items-center gap-2 rounded-full bg-fuchsia-500/20 px-4 py-2 text-sm font-medium text-fuchsia-100">
               <Calculator className="h-4 w-4" />
               True Cost Calculator
             </div>
             <h1 className="mt-4 text-3xl font-bold text-white sm:text-4xl">
               Compare Cars From Different States
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-purple-100">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-fuchsia-100">
               Add up to 5 cars and see the estimated delivered cost to your door.
               Find out which deal is actually the best value.
             </p>
@@ -249,7 +249,7 @@ export default function CalculatorPage() {
                     type="checkbox"
                     checked={transportType === 'door'}
                     onChange={(e) => setTransportType(e.target.checked ? 'door' : 'depot')}
-                    className="h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                    className="h-5 w-5 rounded border-gray-300 text-fuchsia-600 focus:ring-fuchsia-500"
                   />
                   <div>
                     <span className="font-medium text-gray-900">Include door-to-door pickup</span>
@@ -362,7 +362,7 @@ export default function CalculatorPage() {
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Stamp Duty</th>
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Rego + CTP</th>
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Inspection</th>
-                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 bg-purple-50">Total</th>
+                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 bg-fuchsia-50">Total</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -396,7 +396,7 @@ export default function CalculatorPage() {
                         <td className="px-4 py-4 text-right text-gray-600">
                           {result.roadworthy > 0 ? formatCurrency(result.roadworthy) : '-'}
                         </td>
-                        <td className="px-4 py-4 text-right font-bold text-purple-600 bg-purple-50">
+                        <td className="px-4 py-4 text-right font-bold text-fuchsia-600 bg-fuchsia-50">
                           {formatCurrency(result.totalDelivered)}
                         </td>
                       </tr>
@@ -425,7 +425,7 @@ export default function CalculatorPage() {
                     </div>
                     <div className="text-right">
                       <div className="text-sm text-gray-500">Total</div>
-                      <div className="text-xl font-bold text-purple-600">{formatCurrency(result.totalDelivered)}</div>
+                      <div className="text-xl font-bold text-fuchsia-600">{formatCurrency(result.totalDelivered)}</div>
                     </div>
                   </div>
 
@@ -460,9 +460,9 @@ export default function CalculatorPage() {
             </div>
 
             {/* Transport Quotes Coming Soon Section */}
-            <div className="rounded-xl border-2 border-dashed border-purple-300 bg-purple-50 p-6">
+            <div className="rounded-xl border-2 border-dashed border-fuchsia-300 bg-fuchsia-50 p-6">
               <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-purple-100 text-purple-600">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-600">
                   <Truck className="h-6 w-6" />
                 </div>
                 <div className="flex-1">
@@ -486,13 +486,13 @@ export default function CalculatorPage() {
                         placeholder="Enter your email"
                         value={waitlistEmail}
                         onChange={(e) => setWaitlistEmail(e.target.value)}
-                        className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                        className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                         required
                       />
                       <Button
                         type="submit"
                         disabled={waitlistLoading}
-                        className="bg-purple-600 hover:bg-purple-700"
+                        className="bg-fuchsia-600 hover:bg-fuchsia-700"
                         onClick={() => trackEvent('transport_cta_clicked')}
                       >
                         {waitlistLoading ? 'Joining...' : 'Notify Me'}
@@ -518,21 +518,21 @@ export default function CalculatorPage() {
         {results.length === 0 && (
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <Truck className="h-8 w-8 text-purple-600" />
+              <Truck className="h-8 w-8 text-fuchsia-600" />
               <h3 className="mt-3 font-semibold text-gray-900">Transport Estimates</h3>
               <p className="mt-2 text-sm text-gray-600">
                 Interstate transport costs are estimated based on average carrier rates. Real quotes coming soon.
               </p>
             </div>
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <FileText className="h-8 w-8 text-purple-600" />
+              <FileText className="h-8 w-8 text-fuchsia-600" />
               <h3 className="mt-3 font-semibold text-gray-900">All Fees Included</h3>
               <p className="mt-2 text-sm text-gray-600">
                 Stamp duty, registration, CTP insurance, and inspection costs all estimated.
               </p>
             </div>
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <Shield className="h-8 w-8 text-purple-600" />
+              <Shield className="h-8 w-8 text-fuchsia-600" />
               <h3 className="mt-3 font-semibold text-gray-900">Updated Rates</h3>
               <p className="mt-2 text-sm text-gray-600">
                 Stamp duty calculated using current state government rates. EV exemptions have ended in most states.

@@ -22,11 +22,11 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-purple-700 to-purple-900 py-16">
+      <section className="bg-gradient-to-br from-fuchsia-700 to-fuchsia-900 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white sm:text-5xl">About landed<span className="font-black">X</span></h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-purple-100">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-fuchsia-100">
               Helping Australians find the best car deals, no matter where they are.
             </p>
           </div>
@@ -79,7 +79,7 @@ export default function AboutPage() {
               },
             ].map((value) => (
               <div key={value.title} className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 text-purple-700">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700">
                   {value.icon}
                 </div>
                 <h3 className="mt-4 text-lg font-semibold text-gray-900">{value.title}</h3>

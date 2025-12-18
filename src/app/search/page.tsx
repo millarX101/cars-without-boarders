@@ -244,7 +244,7 @@ function SearchPageContent() {
                 setMinPrice('');
                 setMaxPrice('');
               }}
-              className="text-sm text-purple-700 hover:underline"
+              className="text-sm text-fuchsia-700 hover:underline"
             >
               Clear all
             </button>
@@ -357,8 +357,8 @@ function SearchPageContent() {
             )}
 
             {/* Advertise Your Car Free Section */}
-            <div className="mt-12 rounded-xl border-2 border-dashed border-purple-300 bg-purple-50 p-8 text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 text-purple-700">
+            <div className="mt-12 rounded-xl border-2 border-dashed border-fuchsia-300 bg-fuchsia-50 p-8 text-center">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700">
                 <Car className="h-8 w-8" />
               </div>
               <h3 className="mt-4 text-xl font-bold text-gray-900">
@@ -368,7 +368,7 @@ function SearchPageContent() {
                 List your car for free on landedX. Upload photos, add your location,
                 and reach buyers across Australia who can see exactly what it will cost delivered to their door.
               </p>
-              <Button className="mt-6 bg-purple-700 hover:bg-purple-800" asChild>
+              <Button className="mt-6 bg-fuchsia-700 hover:bg-fuchsia-800" asChild>
                 <Link href="/list-your-car">
                   List Your Car Free
                 </Link>

@@ -344,9 +344,9 @@ export default function ListYourCarPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-purple-700 to-purple-900 py-12">
+      <section className="bg-gradient-to-br from-fuchsia-700 to-fuchsia-900 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Link href="/search" className="inline-flex items-center gap-2 text-purple-200 hover:text-white mb-4">
+          <Link href="/search" className="inline-flex items-center gap-2 text-fuchsia-200 hover:text-white mb-4">
             <ArrowLeft className="h-4 w-4" />
             Back to Search
           </Link>
@@ -356,7 +356,7 @@ export default function ListYourCarPage() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white sm:text-4xl">List Your Car Free</h1>
-              <p className="mt-1 text-lg text-purple-200">
+              <p className="mt-1 text-lg text-fuchsia-200">
                 Reach buyers across Australia who can see exactly what it costs delivered
               </p>
             </div>
@@ -376,19 +376,19 @@ export default function ListYourCarPage() {
               <div key={s.num} className="flex items-center">
                 <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
                   step >= s.num
-                    ? 'bg-purple-700 text-white'
+                    ? 'bg-fuchsia-700 text-white'
                     : 'bg-gray-200 text-gray-500'
                 }`}>
                   {step > s.num ? <CheckCircle className="h-5 w-5" /> : s.num}
                 </div>
                 <span className={`ml-2 hidden text-sm sm:block ${
-                  step >= s.num ? 'text-purple-700 font-medium' : 'text-gray-500'
+                  step >= s.num ? 'text-fuchsia-700 font-medium' : 'text-gray-500'
                 }`}>
                   {s.label}
                 </span>
                 {i < 2 && (
                   <div className={`mx-4 h-0.5 w-12 sm:w-24 ${
-                    step > s.num ? 'bg-purple-700' : 'bg-gray-200'
+                    step > s.num ? 'bg-fuchsia-700' : 'bg-gray-200'
                   }`} />
                 )}
               </div>
@@ -421,7 +421,7 @@ export default function ListYourCarPage() {
                   value={formData.make}
                   onChange={(e) => updateField('make', e.target.value)}
                   placeholder="e.g. Toyota"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                 />
               </div>
 
@@ -434,7 +434,7 @@ export default function ListYourCarPage() {
                   value={formData.model}
                   onChange={(e) => updateField('model', e.target.value)}
                   placeholder="e.g. Camry"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                 />
               </div>
 
@@ -447,7 +447,7 @@ export default function ListYourCarPage() {
                   value={formData.variant}
                   onChange={(e) => updateField('variant', e.target.value)}
                   placeholder="e.g. SL"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                 />
               </div>
 
@@ -473,7 +473,7 @@ export default function ListYourCarPage() {
                     value={formData.price}
                     onChange={(e) => updateField('price', e.target.value)}
                     placeholder="25000"
-                    className="w-full rounded-lg border border-gray-300 pl-8 pr-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                    className="w-full rounded-lg border border-gray-300 pl-8 pr-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                   />
                 </div>
               </div>
@@ -487,7 +487,7 @@ export default function ListYourCarPage() {
                   value={formData.odometer}
                   onChange={(e) => updateField('odometer', e.target.value)}
                   placeholder="50000"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                 />
               </div>
 
@@ -544,7 +544,7 @@ export default function ListYourCarPage() {
                   value={formData.colour}
                   onChange={(e) => updateField('colour', e.target.value)}
                   placeholder="e.g. Silver"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                 />
               </div>
 
@@ -557,13 +557,13 @@ export default function ListYourCarPage() {
                   value={formData.engineSize}
                   onChange={(e) => updateField('engineSize', e.target.value)}
                   placeholder="e.g. 2.5L"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                 />
               </div>
             </div>
 
             {/* VIN & Clear Title - Required for buyer protection */}
-            <div className="mt-8 p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <div className="mt-8 p-4 bg-fuchsia-50 rounded-lg border border-fuchsia-200">
               <h3 className="font-semibold text-gray-900 mb-4">Verification (Required)</h3>
               <p className="text-sm text-gray-600 mb-4">
                 To protect buyers and sellers, we require VIN and clear title confirmation for all listings.
@@ -580,7 +580,7 @@ export default function ListYourCarPage() {
                     onChange={(e) => updateField('vin', e.target.value.toUpperCase())}
                     placeholder="e.g. 1HGBH41JXMN109186"
                     maxLength={17}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 font-mono"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 font-mono"
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Found on your registration papers or driver&apos;s door jamb. 11-17 characters.
@@ -593,7 +593,7 @@ export default function ListYourCarPage() {
                     id="clearTitle"
                     checked={formData.clearTitle}
                     onChange={(e) => updateField('clearTitle', e.target.checked)}
-                    className="mt-1 h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                    className="mt-1 h-5 w-5 rounded border-gray-300 text-fuchsia-600 focus:ring-fuchsia-500"
                   />
                   <label htmlFor="clearTitle" className="text-sm">
                     <span className="font-medium text-gray-900">I confirm this vehicle has a clear title <span className="text-red-500">*</span></span>
@@ -650,7 +650,7 @@ export default function ListYourCarPage() {
                       onChange={(e) => updateField('sellerPostcode', e.target.value)}
                       placeholder="3000"
                       maxLength={4}
-                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                     />
                   </div>
                   <div>
@@ -662,7 +662,7 @@ export default function ListYourCarPage() {
                       value={formData.sellerSuburb}
                       onChange={(e) => updateField('sellerSuburb', e.target.value)}
                       placeholder="Melbourne"
-                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                     />
                   </div>
                 </div>
@@ -682,7 +682,7 @@ export default function ListYourCarPage() {
                       value={formData.contactName}
                       onChange={(e) => updateField('contactName', e.target.value)}
                       placeholder="John Smith"
-                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                     />
                   </div>
                   <div>
@@ -694,7 +694,7 @@ export default function ListYourCarPage() {
                       value={formData.contactEmail}
                       onChange={(e) => updateField('contactEmail', e.target.value)}
                       placeholder="john@example.com"
-                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -706,7 +706,7 @@ export default function ListYourCarPage() {
                       value={formData.contactPhone}
                       onChange={(e) => updateField('contactPhone', e.target.value)}
                       placeholder="0400 000 000"
-                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -715,7 +715,7 @@ export default function ListYourCarPage() {
                         type="checkbox"
                         checked={formData.showPhone}
                         onChange={(e) => updateField('showPhone', e.target.checked)}
-                        className="h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-500"
+                        className="h-4 w-4 rounded border-gray-300 text-fuchsia-700 focus:ring-fuchsia-500"
                       />
                       <span className="text-sm text-gray-700">Show phone number on listing</span>
                     </label>
@@ -758,14 +758,14 @@ export default function ListYourCarPage() {
                         <X className="h-4 w-4" />
                       </button>
                       {index === 0 && (
-                        <span className="absolute bottom-1 left-1 rounded bg-purple-700 px-1.5 py-0.5 text-xs text-white">
+                        <span className="absolute bottom-1 left-1 rounded bg-fuchsia-700 px-1.5 py-0.5 text-xs text-white">
                           Primary
                         </span>
                       )}
                     </div>
                   ))}
                   {images.length < 10 && (
-                    <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 hover:border-purple-500 hover:bg-purple-50">
+                    <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 hover:border-fuchsia-500 hover:bg-fuchsia-50">
                       <Camera className="h-8 w-8 text-gray-400" />
                       <span className="mt-2 text-xs text-gray-500">Add Photo</span>
                       <input
@@ -791,7 +791,7 @@ export default function ListYourCarPage() {
                   value={formData.title}
                   onChange={(e) => updateField('title', e.target.value)}
                   placeholder="e.g. 2020 Toyota Camry SL - Low KMs, Full Service History"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                 />
               </div>
 
@@ -805,7 +805,7 @@ export default function ListYourCarPage() {
                   onChange={(e) => updateField('description', e.target.value)}
                   rows={6}
                   placeholder="Describe your car's condition, features, service history, reason for selling..."
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
                 />
               </div>
 
@@ -816,7 +816,7 @@ export default function ListYourCarPage() {
                     type="checkbox"
                     checked={formData.hasRwc}
                     onChange={(e) => updateField('hasRwc', e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-500"
+                    className="h-4 w-4 rounded border-gray-300 text-fuchsia-700 focus:ring-fuchsia-500"
                   />
                   <span className="text-sm text-gray-700">Has Roadworthy</span>
                 </label>
@@ -825,7 +825,7 @@ export default function ListYourCarPage() {
                     type="checkbox"
                     checked={formData.hasRego}
                     onChange={(e) => updateField('hasRego', e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-500"
+                    className="h-4 w-4 rounded border-gray-300 text-fuchsia-700 focus:ring-fuchsia-500"
                   />
                   <span className="text-sm text-gray-700">Currently Registered</span>
                 </label>
@@ -834,7 +834,7 @@ export default function ListYourCarPage() {
                     type="checkbox"
                     checked={formData.isNegotiable}
                     onChange={(e) => updateField('isNegotiable', e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-500"
+                    className="h-4 w-4 rounded border-gray-300 text-fuchsia-700 focus:ring-fuchsia-500"
                   />
                   <span className="text-sm text-gray-700">Price Negotiable</span>
                 </label>
@@ -857,7 +857,7 @@ export default function ListYourCarPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="h-4 w-4 text-teal-500 mt-0.5 flex-shrink-0" />
-                  You agree to our <Link href="/privacy" className="text-purple-700 hover:underline">Privacy Policy</Link>
+                  You agree to our <Link href="/privacy" className="text-fuchsia-700 hover:underline">Privacy Policy</Link>
                 </li>
               </ul>
             </div>

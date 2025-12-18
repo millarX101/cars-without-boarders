@@ -129,7 +129,7 @@ export default function SavedPage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-700" />
+        <Loader2 className="h-8 w-8 animate-spin text-fuchsia-700" />
       </div>
     );
   }
@@ -175,7 +175,7 @@ export default function SavedPage() {
             onClick={() => setActiveTab('cars')}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 -mb-px ${
               activeTab === 'cars'
-                ? 'border-purple-700 text-purple-700'
+                ? 'border-fuchsia-700 text-fuchsia-700'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -186,7 +186,7 @@ export default function SavedPage() {
             onClick={() => setActiveTab('searches')}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 -mb-px ${
               activeTab === 'searches'
-                ? 'border-purple-700 text-purple-700'
+                ? 'border-fuchsia-700 text-fuchsia-700'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -243,7 +243,7 @@ export default function SavedPage() {
                           <div>
                             <Link
                               href={`/marketplace/${saved.listing_id}`}
-                              className="font-semibold text-gray-900 hover:text-purple-700"
+                              className="font-semibold text-gray-900 hover:text-fuchsia-700"
                             >
                               {saved.listing?.year} {saved.listing?.make} {saved.listing?.model}
                             </Link>
@@ -274,7 +274,7 @@ export default function SavedPage() {
                             {saved.total_delivered && (
                               <div>
                                 <p className="text-xs text-gray-500">Delivered to {saved.delivery_state}</p>
-                                <p className="font-bold text-purple-700">{formatPrice(saved.total_delivered)}</p>
+                                <p className="font-bold text-fuchsia-700">{formatPrice(saved.total_delivered)}</p>
                               </div>
                             )}
                           </div>
@@ -339,7 +339,7 @@ export default function SavedPage() {
                           variant="ghost"
                           size="icon"
                           onClick={() => toggleSearchAlerts(search.id)}
-                          className={search.email_alerts ? 'text-purple-700' : 'text-gray-400'}
+                          className={search.email_alerts ? 'text-fuchsia-700' : 'text-gray-400'}
                         >
                           <Bell className="h-5 w-5" />
                         </Button>

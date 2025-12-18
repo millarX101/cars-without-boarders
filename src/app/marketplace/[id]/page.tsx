@@ -148,7 +148,7 @@ export default function MarketplaceListingPage({ params }: { params: Promise<{ i
         <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
         <h1 className="text-xl font-bold text-gray-900">Listing Not Found</h1>
         <p className="mt-2 text-gray-600">This listing may have been removed or sold.</p>
-        <Link href="/search" className="mt-4 text-purple-700 hover:underline">
+        <Link href="/search" className="mt-4 text-fuchsia-700 hover:underline">
           Browse all cars
         </Link>
       </div>
@@ -237,7 +237,7 @@ export default function MarketplaceListingPage({ params }: { params: Promise<{ i
                       key={i}
                       onClick={() => setCurrentImageIndex(i)}
                       className={`flex-shrink-0 h-16 w-24 rounded-lg overflow-hidden border-2 ${
-                        i === currentImageIndex ? 'border-purple-700' : 'border-transparent'
+                        i === currentImageIndex ? 'border-fuchsia-700' : 'border-transparent'
                       }`}
                     >
                       <Image src={img} alt="" width={96} height={64} className="h-full w-full object-cover" />
@@ -270,7 +270,7 @@ export default function MarketplaceListingPage({ params }: { params: Promise<{ i
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-3xl font-bold text-purple-700">
+                  <div className="text-3xl font-bold text-fuchsia-700">
                     ${listing.price.toLocaleString()}
                   </div>
                   {listing.is_negotiable && (
@@ -288,7 +288,7 @@ export default function MarketplaceListingPage({ params }: { params: Promise<{ i
                   </span>
                 )}
                 {listing.has_rego && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-3 py-1 text-sm text-purple-700">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-fuchsia-100 px-3 py-1 text-sm text-fuchsia-700">
                     <CheckCircle className="h-3.5 w-3.5" />
                     Registered
                   </span>
@@ -411,7 +411,7 @@ export default function MarketplaceListingPage({ params }: { params: Promise<{ i
                 <hr />
                 <div className="flex justify-between text-lg font-bold">
                   <span className="text-gray-900">Total</span>
-                  <span className="text-purple-700">${totalCost.toLocaleString()}</span>
+                  <span className="text-fuchsia-700">${totalCost.toLocaleString()}</span>
                 </div>
               </div>
 
@@ -456,7 +456,7 @@ export default function MarketplaceListingPage({ params }: { params: Promise<{ i
               <div className="rounded-xl bg-white p-6 shadow-sm">
                 <h2 className="text-lg font-bold text-gray-900 mb-4">Private Seller</h2>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-purple-700">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700">
                     {listing.contact_name.charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -547,7 +547,7 @@ export default function MarketplaceListingPage({ params }: { params: Promise<{ i
                   id="financeInterest"
                   checked={interestForm.financeInterest}
                   onChange={(e) => setInterestForm(f => ({ ...f, financeInterest: e.target.checked }))}
-                  className="mt-1 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-fuchsia-600 focus:ring-fuchsia-500"
                 />
                 <label htmlFor="financeInterest" className="text-sm">
                   <span className="font-medium text-gray-900">I may be interested in finance options</span>

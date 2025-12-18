@@ -127,7 +127,7 @@ export default function SignupPage() {
               >
                 Try a different email
               </Button>
-              <Link href="/auth/login" className="block text-sm text-purple-700 hover:underline">
+              <Link href="/auth/login" className="block text-sm text-fuchsia-700 hover:underline">
                 Already verified? Sign in
               </Link>
             </div>
@@ -141,7 +141,7 @@ export default function SignupPage() {
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-8">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-700">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-fuchsia-700">
             <Car className="h-7 w-7 text-white" />
           </div>
           <CardTitle className="text-2xl">Create an account</CardTitle>
@@ -273,16 +273,16 @@ export default function SignupPage() {
               <input
                 type="checkbox"
                 id="terms"
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-500"
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-fuchsia-700 focus:ring-fuchsia-500"
                 required
               />
               <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
                 I agree to the{' '}
-                <Link href="/terms" className="text-purple-700 hover:underline">
+                <Link href="/terms" className="text-fuchsia-700 hover:underline">
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link href="/privacy" className="text-purple-700 hover:underline">
+                <Link href="/privacy" className="text-fuchsia-700 hover:underline">
                   Privacy Policy
                 </Link>
               </label>
@@ -302,7 +302,7 @@ export default function SignupPage() {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <Link href="/auth/login" className="font-medium text-purple-700 hover:underline">
+            <Link href="/auth/login" className="font-medium text-fuchsia-700 hover:underline">
               Sign in
             </Link>
           </p>
